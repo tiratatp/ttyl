@@ -1,21 +1,18 @@
 Logfile initialized
 [INFO] logfile = D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build.log
-[DEBUG] D:\Documents and Settings\All Users\Application Data\Titanium\mobilesdk\win32\1.7.1\android\builder.py simulator ttyl C:\android-sdk-windows D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl com.klosr.ttyl 3 HVGA
+[DEBUG] D:\Documents and Settings\All Users\Application Data\Titanium\mobilesdk\win32\1.7.1\android\builder.py simulator ttyl C:\android-sdk-windows D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl com.klosr.ttyl 6 HVGA
 [INFO] Building ttyl for Android ... one moment
 [INFO] Titanium SDK version: 1.7.1 (06/21/11 14:28 1293a6d)
 [DEBUG] Waiting for device to be ready ...
 [TRACE] adb devices returned 2 devices/emulators
-[TRACE] adb devices returned 2 devices/emulators
-[TRACE] adb devices returned 2 devices/emulators
-[TRACE] adb devices returned 2 devices/emulators
-[TRACE] adb devices returned 2 devices/emulators
-[DEBUG] Device connected... (waited 20 seconds)
-[DEBUG] waited 20.531000 seconds on emulator to get ready
-[INFO] Waiting for the Android Emulator to become available
-[ERROR] Timed out waiting for android.process.acore
-[DEBUG] com.klosr.ttyl installed? False
+[DEBUG] Device connected... (waited 0 seconds)
+[DEBUG] waited 0.031000 seconds on emulator to get ready
+[DEBUG] com.klosr.ttyl installed? True
 [INFO] Fastdev server running, deploying in Fastdev mode
 [INFO] Copying project resources..
+[TRACE] COPYING CREATED FILE: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\Resources\android\Thumbs.db => D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\Thumbs.db
+[TRACE] COPYING MODIFIED FILE: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\Resources\app.js => D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\app.js
+[TRACE] COPYING CREATED FILE: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\Resources\images\Thumbs.db => D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\images\Thumbs.db
 [TRACE] Generating Java Classes
 [DEBUG] Processing Android resource drawables
 [DEBUG] copying app icon: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\appicon.png
@@ -28,7 +25,6 @@ Logfile initialized
 [DEBUG] adding D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\gen\com\klosr\ttyl\TtylApplication.java to javac build list
 [DEBUG] Building Java Sources: "D:\\Documents and Settings\\tiratat.patana-anake\\My Documents\\Titanium Studio Workspace\\ttyl\\build\\android\\gen\\com\\klosr\\ttyl\\R.java" "D:\\Documents and Settings\\tiratat.patana-anake\\My Documents\\Titanium Studio Workspace\\ttyl\\build\\android\\gen\\com\\klosr\\ttyl\\TtylActivity.java" "D:\\Documents and Settings\\tiratat.patana-anake\\My Documents\\Titanium Studio Workspace\\ttyl\\build\\android\\gen\\com\\klosr\\ttyl\\TtylAppInfo.java" "D:\\Documents and Settings\\tiratat.patana-anake\\My Documents\\Titanium Studio Workspace\\ttyl\\build\\android\\gen\\com\\klosr\\ttyl\\TtylApplication.java"
 [INFO] Waiting for SDCard to become available..
-[ERROR] Timed out waiting for SDCard to become available (60s)
 [INFO] Compiling Android Resources... This could take some time
 [DEBUG] Android classes.dex built
 [DEBUG] creating unsigned apk: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\app-unsigned.apk
@@ -92,9 +88,9 @@ Logfile initialized
 [DEBUG] Waiting for device to be ready ...
 [TRACE] adb devices returned 2 devices/emulators
 [DEBUG] Device connected... (waited 0 seconds)
-[DEBUG] waited 0.079000 seconds on emulator to get ready
+[DEBUG] waited 0.046000 seconds on emulator to get ready
 [INFO] Installing application on device
-[ERROR] Failed installing com.klosr.ttyl: 	pkg: /data/local/tmp/app.apk
-Failure [INSTALL_FAILED_MISSING_SHARED_LIBRARY]
+[INFO] Launching application ... ttyl
+[TRACE] Launch output: Starting: Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=com.klosr.ttyl/.TtylActivity }
 
-[INFO] Android Emulator has exited
+[INFO] Deployed ttyl ... Application should be running.

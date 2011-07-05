@@ -2,6 +2,14 @@
 // Create main view
 //
 A2B.createView = function() {
+	
+	var osname = Titanium.Platform.osname;
+	if(osname == "android") {
+		require('com.mwaysolutions.barcode');
+	} else if(osname == "ipad" || osname == "iphone") {
+		//
+	}
+	
 	// create map view
 	A2B.mapview = Titanium.Map.createView({
 		mapType: Titanium.Map.STANDARD_TYPE,
