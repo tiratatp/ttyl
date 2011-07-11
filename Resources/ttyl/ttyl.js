@@ -1,4 +1,4 @@
-Ti.include('/ttyl/home.js');
+Ti.include('/ttyl/home/home.js');
 Ti.include('/ttyl/login.js');
 Ti.include('/ttyl/feed/feed.js')
 // create tab group
