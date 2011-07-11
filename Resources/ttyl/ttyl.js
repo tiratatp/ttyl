@@ -1,5 +1,5 @@
 Ti.include('/ttyl/home/home.js');
-Ti.include('/ttyl/login.js');
+Ti.include('/ttyl/login/login.js');
 Ti.include('/ttyl/feed/feed.js')
 // create tab group
 var tabGroup = Titanium.UI.createTabGroup();
