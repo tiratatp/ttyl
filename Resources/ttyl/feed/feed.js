@@ -30,7 +30,8 @@ feed.init_data = [
 
 //init var
 feed.win = Ti.UI.createWindow({
-	title: "Stream"
+	title: "Stream",
+	backgroundColor: feed.bgColor
 });
 feed.tab = Ti.UI.createTab({
 	window: feed.win,
@@ -79,6 +80,7 @@ feed.table.addEventListener('click',function(e){
 	if(e.index>=0){
 		if(feed.activeRow != null){
 			feed.activeRow.height=feed.rowHeight;
+			feed.activeRow.children[0].height=feed.rowHeight;
 			feed.activeRow.remove(feed.activeRow.children[1]);
 			feed.activeRow.backgroundColor = feed.bgColor;
 		}
@@ -100,6 +102,7 @@ feed.table.addEventListener('click',function(e){
 		rowButtonView.add(button1);
 		feed.activeRow.height = feed.rowHeightExpanded;
 		feed.activeRow.backgroundColor = feed.bgColorExpanded;
+		feed.activeRow.children[0].height = feed.rowHeightExpanded;
 		feed.activeRow.add(rowButtonView);
 	}
 });
