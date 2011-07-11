@@ -1,102 +1,19 @@
 Logfile initialized
-[INFO] logfile = D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build.log
-[DEBUG] D:\Documents and Settings\All Users\Application Data\Titanium\mobilesdk\win32\1.7.1\android\builder.py install ttyl C:\android-sdk-windows D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl com.klosr.ttyl 6
+[INFO] logfile = /Users/plub/Coding/Titanium/Titanium Studio Workspace/ttylNEW/build.log
+[DEBUG] /Library/Application Support/Titanium/mobilesdk/osx/1.7.1/android/builder.py simulator ttylNEW /Users/plub/Coding/Titanium/android-sdk /Users/plub/Coding/Titanium/Titanium Studio Workspace/ttylNEW com.klosr.ttyl 6 WVGA854 
+[INFO] Building ttylNEW for Android ... one moment
 [INFO] Titanium SDK version: 1.7.1 (06/21/11 14:28 1293a6d)
 [DEBUG] Waiting for device to be ready ...
-[TRACE] adb devices returned 2 devices/emulators
-[DEBUG] Device connected... (waited 0 seconds)
-[DEBUG] waited 0.016000 seconds on emulator to get ready
-[DEBUG] com.klosr.ttyl installed? True
-[INFO] Copying project resources..
-[INFO] Detected tiapp.xml change, forcing full re-build...
-[TRACE] COPYING CREATED FILE: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\Resources\android\appicon.png => D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\appicon.png
-[TRACE] COPYING CREATED FILE: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\Resources\android\default.png => D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\default.png
-[TRACE] COPYING CREATED FILE: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\Resources\android\Thumbs.db => D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\Thumbs.db
-[TRACE] COPYING CREATED FILE: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\Resources\app.js => D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\app.js
-[TRACE] COPYING CREATED FILE: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\Resources\images\A2B_logo.png => D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\images\A2B_logo.png
-[TRACE] COPYING CREATED FILE: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\Resources\images\A2B_logo_low.png => D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\images\A2B_logo_low.png
-[TRACE] COPYING CREATED FILE: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\Resources\images\A2B_slpash_low.png => D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\images\A2B_slpash_low.png
-[TRACE] COPYING CREATED FILE: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\Resources\images\blk_button_BG.9.png => D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\images\blk_button_BG.9.png
-[TRACE] COPYING CREATED FILE: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\Resources\images\blk_button_BG.png => D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\images\blk_button_BG.png
-[TRACE] COPYING CREATED FILE: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\Resources\images\blk_button_BG@2x.png => D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\images\blk_button_BG@2x.png
-[TRACE] COPYING CREATED FILE: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\Resources\images\gray_top_BG.png => D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\images\gray_top_BG.png
-[TRACE] COPYING CREATED FILE: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\Resources\images\gray_top_BG@2x.png => D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\images\gray_top_BG@2x.png
-[TRACE] COPYING CREATED FILE: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\Resources\images\locate_icon.png => D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\images\locate_icon.png
-[TRACE] COPYING CREATED FILE: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\Resources\images\locate_icon_low.png => D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\images\locate_icon_low.png
-[TRACE] COPYING CREATED FILE: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\Resources\images\red_button_BG.9.png => D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\images\red_button_BG.9.png
-[TRACE] COPYING CREATED FILE: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\Resources\images\red_button_BG.png => D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\images\red_button_BG.png
-[TRACE] COPYING CREATED FILE: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\Resources\images\red_button_BG@2x.png => D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\images\red_button_BG@2x.png
-[TRACE] COPYING CREATED FILE: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\Resources\images\Thumbs.db => D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\images\Thumbs.db
-[TRACE] COPYING CREATED FILE: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\Resources\KS_nav_ui.png => D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\KS_nav_ui.png
-[TRACE] COPYING CREATED FILE: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\Resources\KS_nav_views.png => D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\KS_nav_views.png
-[TRACE] COPYING CREATED FILE: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\Resources\ttyl\home.js => D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\ttyl\home.js
-[TRACE] COPYING CREATED FILE: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\Resources\ttyl\ttyl.js => D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\ttyl\ttyl.js
-[TRACE] COPYING CREATED FILE: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\Resources\utils.js => D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\utils.js
-[TRACE] Generating Java Classes
-[DEBUG] Processing Android resource drawables
-[DEBUG] copying app icon: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\appicon.png
-[DEBUG] generating theme.xml
-[DEBUG] found splash screen at D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\default.png
-[TRACE] Writing out AndroidManifest.xml
-[DEBUG] adding D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\gen\com\klosr\ttyl\R.java to javac build list
-[DEBUG] adding D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\gen\com\klosr\ttyl\TtylActivity.java to javac build list
-[DEBUG] adding D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\gen\com\klosr\ttyl\TtylAppInfo.java to javac build list
-[DEBUG] adding D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\gen\com\klosr\ttyl\TtylApplication.java to javac build list
-[DEBUG] Building Java Sources: "D:\\Documents and Settings\\tiratat.patana-anake\\My Documents\\Titanium Studio Workspace\\ttyl\\build\\android\\gen\\com\\klosr\\ttyl\\R.java" "D:\\Documents and Settings\\tiratat.patana-anake\\My Documents\\Titanium Studio Workspace\\ttyl\\build\\android\\gen\\com\\klosr\\ttyl\\TtylActivity.java" "D:\\Documents and Settings\\tiratat.patana-anake\\My Documents\\Titanium Studio Workspace\\ttyl\\build\\android\\gen\\com\\klosr\\ttyl\\TtylAppInfo.java" "D:\\Documents and Settings\\tiratat.patana-anake\\My Documents\\Titanium Studio Workspace\\ttyl\\build\\android\\gen\\com\\klosr\\ttyl\\TtylApplication.java"
-[INFO] Compiling Android Resources... This could take some time
-[DEBUG] Android classes.dex built
-[DEBUG] creating unsigned apk: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\app-unsigned.apk
-[DEBUG] from resource zip => assets/Resources/images/A2B_logo.png
-[DEBUG] from resource zip => assets/Resources/images/A2B_logo_low.png
-[DEBUG] from resource zip => assets/Resources/images/A2B_slpash_low.png
-[DEBUG] from resource zip => assets/Resources/images/blk_button_BG.9.png
-[DEBUG] from resource zip => assets/Resources/images/blk_button_BG.png
-[DEBUG] from resource zip => assets/Resources/images/blk_button_BG@2x.png
-[DEBUG] from resource zip => assets/Resources/images/gray_top_BG.png
-[DEBUG] from resource zip => assets/Resources/images/gray_top_BG@2x.png
-[DEBUG] from resource zip => assets/Resources/images/locate_icon.png
-[DEBUG] from resource zip => assets/Resources/images/locate_icon_low.png
-[DEBUG] from resource zip => assets/Resources/images/red_button_BG.9.png
-[DEBUG] from resource zip => assets/Resources/images/red_button_BG.png
-[DEBUG] from resource zip => assets/Resources/images/red_button_BG@2x.png
-[DEBUG] from resource zip => assets/Resources/ttyl/home.js
-[DEBUG] from resource zip => assets/Resources/ttyl/ttyl.js
-[DEBUG] from resource zip => assets/Resources/KS_nav_ui.png
-[DEBUG] from resource zip => assets/Resources/KS_nav_views.png
-[DEBUG] from resource zip => assets/Resources/app.js
-[DEBUG] from resource zip => assets/Resources/appicon.png
-[DEBUG] from resource zip => assets/Resources/default.png
-[DEBUG] from resource zip => assets/Resources/utils.js
-[DEBUG] from resource zip => assets/tiapp.xml
-[DEBUG] from resource zip => res/drawable/appicon.png
-[DEBUG] from resource zip => res/drawable/background.png
-[DEBUG] from resource zip => res/layout/titanium_tabgroup.xml
-[DEBUG] from resource zip => AndroidManifest.xml
-[DEBUG] from resource zip => resources.arsc
-[DEBUG] from JAR D:\Documents and Settings\All Users\Application Data\Titanium\mobilesdk\win32\1.7.1\android\modules\titanium-ui.jar => ti/modules/titanium/ui/widget/webview/binding.js
-[DEBUG] from JAR D:\Documents and Settings\All Users\Application Data\Titanium\mobilesdk\win32\1.7.1\android\modules\titanium-ui.jar => ti/modules/titanium/ui/widget/webview/binding.min.js
-[DEBUG] from JAR D:\Documents and Settings\All Users\Application Data\Titanium\mobilesdk\win32\1.7.1\android\modules\titanium-ui.jar => ti/modules/titanium/ui/widget/webview/json2.js
-[DEBUG] from JAR D:\Documents and Settings\All Users\Application Data\Titanium\mobilesdk\win32\1.7.1\android\titanium.jar => org/apache/Commons-NOTICE.txt
-[DEBUG] from JAR D:\Documents and Settings\All Users\Application Data\Titanium\mobilesdk\win32\1.7.1\android\titanium.jar => org/apache/HttpComponents-NOTICE.txt
-[DEBUG] from JAR D:\Documents and Settings\All Users\Application Data\Titanium\mobilesdk\win32\1.7.1\android\titanium.jar => org/apache/mime4j-NOTICE.txt
-[DEBUG] from JAR D:\Documents and Settings\All Users\Application Data\Titanium\mobilesdk\win32\1.7.1\android\titanium.jar => org/appcelerator/titanium/build.properties
-[DEBUG] from JAR D:\Documents and Settings\All Users\Application Data\Titanium\mobilesdk\win32\1.7.1\android\titanium.jar => org/appcelerator/titanium/res/drawable/background.png
-[DEBUG] from JAR D:\Documents and Settings\All Users\Application Data\Titanium\mobilesdk\win32\1.7.1\android\titanium.jar => org/appcelerator/titanium/res/drawable/btn_check_buttonless_on.png
-[DEBUG] from JAR D:\Documents and Settings\All Users\Application Data\Titanium\mobilesdk\win32\1.7.1\android\titanium.jar => org/appcelerator/titanium/res/drawable/btn_check_buttonless_on_18.png
-[DEBUG] from JAR D:\Documents and Settings\All Users\Application Data\Titanium\mobilesdk\win32\1.7.1\android\titanium.jar => org/appcelerator/titanium/res/drawable/btn_check_buttonless_on_48.png
-[DEBUG] from JAR D:\Documents and Settings\All Users\Application Data\Titanium\mobilesdk\win32\1.7.1\android\titanium.jar => org/appcelerator/titanium/res/drawable/btn_more.png
-[DEBUG] from JAR D:\Documents and Settings\All Users\Application Data\Titanium\mobilesdk\win32\1.7.1\android\titanium.jar => org/appcelerator/titanium/res/drawable/btn_more_18.png
-[DEBUG] from JAR D:\Documents and Settings\All Users\Application Data\Titanium\mobilesdk\win32\1.7.1\android\titanium.jar => org/appcelerator/titanium/res/drawable/btn_more_48.png
-[DEBUG] from JAR D:\Documents and Settings\All Users\Application Data\Titanium\mobilesdk\win32\1.7.1\android\titanium.jar => org/appcelerator/titanium/res/drawable/btn_picker_normal.9.png
-[DEBUG] from JAR D:\Documents and Settings\All Users\Application Data\Titanium\mobilesdk\win32\1.7.1\android\titanium.jar => org/appcelerator/titanium/res/drawable/btn_picker_pressed.9.png
-[DEBUG] from JAR D:\Documents and Settings\All Users\Application Data\Titanium\mobilesdk\win32\1.7.1\android\titanium.jar => org/appcelerator/titanium/res/drawable/btn_picker_selected.9.png
-[DEBUG] from JAR D:\Documents and Settings\All Users\Application Data\Titanium\mobilesdk\win32\1.7.1\android\titanium.jar => org/appcelerator/titanium/res/drawable/default_icon.png
-[DEBUG] from JAR D:\Documents and Settings\All Users\Application Data\Titanium\mobilesdk\win32\1.7.1\android\titanium.jar => org/appcelerator/titanium/res/drawable/photoDefault.png
-[DEBUG] from JAR D:\Documents and Settings\All Users\Application Data\Titanium\mobilesdk\win32\1.7.1\android\smalljs.jar => org/mozilla/javascript/resources/Messages.properties
-[DEBUG] from JAR D:\Documents and Settings\All Users\Application Data\Titanium\mobilesdk\win32\1.7.1\android\smalljs.jar => org/mozilla/javascript/resources/Messages_fr.properties
-[DEBUG] Waiting for device to be ready ...
-[TRACE] adb devices returned 2 devices/emulators
-[DEBUG] Device connected... (waited 0 seconds)
-[DEBUG] waited 0.015000 seconds on emulator to get ready
-[INFO] Installing application on emulator
-[INFO] Application installed. Launch from drawer on Home Screen
+[TRACE] adb devices returned 1 devices/emulators
+[TRACE] adb devices returned 1 devices/emulators
+[TRACE] adb devices returned 1 devices/emulators
+[TRACE] adb devices returned 1 devices/emulators
+[TRACE] adb devices returned 1 devices/emulators
+[INFO] Android Emulator has exited
+[TRACE] adb devices returned 0 devices/emulators
+[TRACE] adb devices returned 0 devices/emulators
+[TRACE] adb devices returned 0 devices/emulators
+[TRACE] adb devices returned 0 devices/emulators
+[TRACE] adb devices returned 0 devices/emulators
+[TRACE] adb devices returned 0 devices/emulators
+[ERROR] Timed out waiting for emulator to be ready, you may need to close the emulator and try again

@@ -1,0 +1,38 @@
+================================================================================
+Appcelerator Titanium Diagnostics Build Log
+The contents of this file are useful to send to Appcelerator Support if
+reporting an issue to help us understand your environment, build settings
+and aid in debugging. Please attach this log to any issue that you report.
+================================================================================
+
+Starting build at 07/11/11 21:28
+
+Build details:
+
+   timestamp=06/21/11 14:28
+   version=1.7.1
+   githash=1293a6d
+
+
+Script arguments:
+   /Library/Application Support/Titanium/mobilesdk/osx/1.7.1/iphone/builder.py
+   simulator
+   4.3
+   /Users/plub/Coding/Titanium/Titanium Studio Workspace/ttylNEW
+   com.klosr.ttyl
+   ttylNEW
+   iphone
+   iphone
+   
+
+Building from: /Library/Application Support/Titanium/mobilesdk/osx/1.7.1/iphone
+Platform: Darwin Kernel Version 10.8.0: Tue Jun  7 16:33:36 PDT 2011; root:xnu-1504.15.3~1/RELEASE_I386
+
+Xcode path is: /Developer
+
+[ERROR] Third-party module: com.mwaysolutions.barcode/0.2 missing library at /Users/plub/Coding/Titanium/Titanium Studio Workspace/ttylNEW/modules/android/com.mwaysolutions.barcode/0.2/libcom.mwaysolutions.barcode.a
+Exception detected in script:
+Traceback (most recent call last):
+  File "/Library/Application Support/Titanium/mobilesdk/osx/1.7.1/iphone/builder.py", line 638, in main
+    sys.exit(1)
+SystemExit: 1
