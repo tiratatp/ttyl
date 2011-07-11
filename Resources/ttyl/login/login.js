@@ -32,10 +32,10 @@ login.loginButton = Titanium.Facebook.createLoginButton({
 	left:'50%',
 	top:'50%'	
 })
-
+login.loginButton.show();
 login.win.add(login.loginButton);
 
-login.loginButton.show();
+
 
 // Titanium.win.add(
 	// Titanium.Facebook.createLoginButton({
