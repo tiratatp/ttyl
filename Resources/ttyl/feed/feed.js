@@ -48,7 +48,7 @@ for (var i = feed.init_data.length - 1; i >= 0; i--) {
 	});
 	
 	var leftImage = Ti.UI.createImageView({
-		image:'ggf.JPG',
+		image:'KS_nav_ui.png',
 		width:"20%",
 		left:"5%"
 	});
