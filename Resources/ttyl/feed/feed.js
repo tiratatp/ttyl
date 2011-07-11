@@ -1,6 +1,8 @@
 /**
  * @author Flash
  */
+Titanium.UI.setBackgroundColor('#000');
+
 
 //namespace
 var feed = {};
@@ -76,7 +78,7 @@ feed.table.addEventListener('click',function(e){
 		if(feed.activeRow != null){
 			feed.activeRow.height=feed.rowHeight;
 			feed.activeRow.remove(feed.activeRow.children[1]);
-			feed.activeRow.backgroundColor = "black";
+			feed.activeRow.backgroundColor = "#000";
 		}
 		feed.activeRow = e.row;
 		
