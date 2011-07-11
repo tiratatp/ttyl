@@ -4,12 +4,6 @@ Logfile initialized
 [INFO] Building ttylNEW for Android ... one moment
 [INFO] Titanium SDK version: 1.7.1 (06/21/11 14:28 1293a6d)
 [DEBUG] Waiting for device to be ready ...
-[TRACE] adb devices returned 1 devices/emulators
-[TRACE] adb devices returned 1 devices/emulators
-[TRACE] adb devices returned 1 devices/emulators
-[TRACE] adb devices returned 1 devices/emulators
-[TRACE] adb devices returned 1 devices/emulators
-[INFO] Android Emulator has exited
 [TRACE] adb devices returned 0 devices/emulators
 [TRACE] adb devices returned 0 devices/emulators
 [TRACE] adb devices returned 0 devices/emulators
