@@ -72,28 +72,32 @@ for (var i = feed.init_data.length - 1; i >= 0; i--) {
 //bind event
 feed.table.addEventListener('click',function(e){
 	Ti.API.info("index of row : " + e.index);
-	if(feed.activeRow != null){
-		feed.activeRow.height=feed.rowHeight;
-		feed.activeRow.remove(feed.activeRow.children[1]);
-	}
-	feed.activeRow = e.row;
-	
-	var rowButtonView = Ti.UI.createView({
-		bottom: 0
-	});
-	var button1 = Ti.UI.createButton({
-		title: "View Offer",
-		right: 5,
-		bottom: 0
-	});
-	
-	button1.addEventListener('click',function(){
+	if(e.index>=0){
+		if(feed.activeRow != null){
+			feed.activeRow.height=feed.rowHeight;
+			feed.activeRow.remove(feed.activeRow.children[1]);
+			feed.activeRow.backgroundColor = "black";
+		}
+		feed.activeRow = e.row;
 		
-	});
-	
-	rowButtonView.add(button1);
-	feed.activeRow.height = feed.rowHeightExpanded;
-	feed.activeRow.add(rowButtonView);
+		var rowButtonView = Ti.UI.createView({
+			bottom: 0
+		});
+		var button1 = Ti.UI.createButton({
+			title: "View Offer",
+			right: 5,
+			bottom: 0
+		});
+		
+		button1.addEventListener('click',function(e){
+			e.stopPropagation();
+		},false);
+		
+		rowButtonView.add(button1);
+		feed.activeRow.height = feed.rowHeightExpanded;
+		feed.activeRow.backgroundColor = "#444";
+		feed.activeRow.add(rowButtonView);
+	}
 });
 
 //bind data
