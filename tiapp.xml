@@ -41,5 +41,6 @@
 	</android>
 	<modules>
 		<module version="0.2">com.mwaysolutions.barcode</module>
+		<module version="0.4.2">tibar</module>
 	</modules>
 </ti:app>
