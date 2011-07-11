@@ -261,6 +261,7 @@ var _home = {};
 				}
 			});
 		} else if(osname == "ipad" || osname == "iphone") {
+			var TiBar = require('tibar');
 			TiBar.scan({
 				// simple configuration for iPhone simulator
 				configure: {
