@@ -1,21 +1,13 @@
 Logfile initialized
-[INFO] logfile = D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build.log
-[DEBUG] D:\Documents and Settings\All Users\Application Data\Titanium\mobilesdk\win32\1.7.1\android\builder.py simulator ttyl C:\android-sdk-windows D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl com.klosr.ttyl 6 HVGA
-[INFO] Building ttyl for Android ... one moment
+[INFO] logfile = /Users/plub/Coding/Titanium/Titanium Studio Workspace/ttylNEW/build.log
+[DEBUG] /Library/Application Support/Titanium/mobilesdk/osx/1.7.1/android/builder.py simulator ttylNEW /Users/plub/Coding/Titanium/android-sdk /Users/plub/Coding/Titanium/Titanium Studio Workspace/ttylNEW com.klosr.ttyl 6 WVGA854 
+[INFO] Building ttylNEW for Android ... one moment
 [INFO] Titanium SDK version: 1.7.1 (06/21/11 14:28 1293a6d)
 [DEBUG] Waiting for device to be ready ...
-[TRACE] adb devices returned 1 devices/emulators
-[DEBUG] Device connected... (waited 0 seconds)
-[DEBUG] waited 0.032000 seconds on emulator to get ready
-[DEBUG] com.klosr.ttyl installed? True
-[INFO] Fastdev server running, deploying in Fastdev mode
-[INFO] Copying project resources..
-[TRACE] COPYING MODIFIED FILE: D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\Resources\ttyl\ttyl.js => D:\Documents and Settings\tiratat.patana-anake\My Documents\Titanium Studio Workspace\ttyl\build\android\bin\assets\Resources\ttyl\ttyl.js
-[INFO] Tiapp.xml unchanged, skipping class generation
-[DEBUG] Processing Android resource drawables
-[INFO] Waiting for SDCard to become available..
-[INFO] Re-launching application ... ttyl
-[INFO] Launching application ... ttyl
-[TRACE] Launch output: Starting: Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=com.klosr.ttyl/.TtylActivity }
-
-[INFO] Relaunched ttyl ... Application should be running.
+[TRACE] adb devices returned 0 devices/emulators
+[TRACE] adb devices returned 0 devices/emulators
+[TRACE] adb devices returned 0 devices/emulators
+[TRACE] adb devices returned 0 devices/emulators
+[TRACE] adb devices returned 0 devices/emulators
+[TRACE] adb devices returned 0 devices/emulators
+[ERROR] Timed out waiting for emulator to be ready, you may need to close the emulator and try again

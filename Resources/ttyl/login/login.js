@@ -4,6 +4,7 @@ var login = {};
 login.tab = null;
 login.win = null;
 login.facebookLogin = null;
+login.loginButton = null;
 
 login.win = Titanium.UI.createWindow({
 	title:'Login',
@@ -26,13 +27,23 @@ Titanium.Facebook.addEventListener('logout', function(e) {
     alert('Logged out');
 });
 
-Titanium.win.add(
-	Titanium.Facebook.createLoginButton({
-		center:{x:'50%',y:'50%'},
-		left:'50%',
-		top:'50%'
-	})
-);
+login.loginButton = Titanium.Facebook.createLoginButton({
+	center:{x:'50%',y:'50%'},
+	left:'50%',
+	top:'50%'	
+})
+
+login.win.add(login.loginButton);
+
+login.loginButton.show();
+
+// Titanium.win.add(
+	// Titanium.Facebook.createLoginButton({
+		// center:{x:'50%',y:'50%'},
+		// left:'50%',
+		// top:'50%'
+	// })
+// );
 
 
 
