@@ -90,8 +90,8 @@ feed.table.addEventListener('click',function(e){
 		});
 		
 		button1.addEventListener('click',function(e){
-			e.stopPropagation();
-		},false);
+			
+		});
 		
 		rowButtonView.add(button1);
 		feed.activeRow.height = feed.rowHeightExpanded;
