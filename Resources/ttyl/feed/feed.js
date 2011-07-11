@@ -48,8 +48,8 @@ for (var i = feed.init_data.length - 1; i >= 0; i--) {
 	});
 	
 	var leftImage = Ti.UI.createImageView({
-		image:'KS_nav_ui.png',
-		width:"20%",
+		image:'ggf.JPG',
+		height: 40,
 		left:"5%"
 	});
 	var title = Ti.UI.createLabel({
