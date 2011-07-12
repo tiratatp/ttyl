@@ -1,7 +1,7 @@
 /**
  * @author Flash
  */
-Titanium.UI.setBackgroundColor('#000');
+Titanium.UI.setBackgroundColor('#FFF');
 
 
 //namespace
@@ -14,6 +14,8 @@ feed.table = null;
 feed.data = [];
 feed.rowHeight = 50;
 feed.rowHeightExpanded = 100;
+feed.bgColor = "#FFF";
+feed.bgColorExpanded = "#444";
 feed.activeRow = null;
 
 feed.init_data = [
@@ -28,7 +30,8 @@ feed.init_data = [
 
 //init var
 feed.win = Ti.UI.createWindow({
-	title: "Stream"
+	title: "Stream",
+	backgroundColor: feed.bgColor
 });
 feed.tab = Ti.UI.createTab({
 	window: feed.win,
@@ -41,7 +44,7 @@ feed.table = Ti.UI.createTableView({});
 
 //row process
 for (var i = feed.init_data.length - 1; i >= 0; i--) {
-	var row = Ti.UI.createTableViewRow({height:feed.rowHeight});
+	var row = Ti.UI.createTableViewRow({height:feed.rowHeight,backgroundColor:feed.bgColor});
 	var rowView = Ti.UI.createView({
 		height:"100%",
 		top:0
@@ -49,7 +52,7 @@ for (var i = feed.init_data.length - 1; i >= 0; i--) {
 	
 	var leftImage = Ti.UI.createImageView({
 		image:'ggf.JPG',
-		width:"20%",
+		width: 50,
 		left:"5%"
 	});
 	var title = Ti.UI.createLabel({
@@ -77,8 +80,9 @@ feed.table.addEventListener('click',function(e){
 	if(e.index>=0){
 		if(feed.activeRow != null){
 			feed.activeRow.height=feed.rowHeight;
+			feed.activeRow.children[0].height=feed.rowHeight;
 			feed.activeRow.remove(feed.activeRow.children[1]);
-			feed.activeRow.backgroundColor = "#000";
+			feed.activeRow.backgroundColor = feed.bgColor;
 		}
 		feed.activeRow = e.row;
 		
@@ -97,7 +101,8 @@ feed.table.addEventListener('click',function(e){
 		
 		rowButtonView.add(button1);
 		feed.activeRow.height = feed.rowHeightExpanded;
-		feed.activeRow.backgroundColor = "#444";
+		feed.activeRow.backgroundColor = feed.bgColorExpanded;
+		feed.activeRow.children[0].height = feed.rowHeightExpanded;
 		feed.activeRow.add(rowButtonView);
 	}
 });
