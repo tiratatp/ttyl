@@ -47,7 +47,7 @@ var _home = {};
 			if (!e.success || e.error) {
 				//currentLocation.text = 'error: ' + JSON.stringify(e.error);
 				Ti.API.info("Code translation: "+translateErrorCode(e.code));
-				alert('error ' + JSON.stringify(e.error));
+				//alert('error ' + JSON.stringify(e.error));
 				return;
 			}
 			isLocationReady=true;
@@ -286,27 +286,7 @@ var _home = {};
 				}*/
 			});
 			//
-		}
-		/*
-		 var intent = Ti.Android.createIntent({
-		 action: "com.google.zxing.client.android.SCAN"
-		 });
-		 intent.putExtra("SCAN_MODE", "QR_SCAN_MODE");
-		 var activity = Ti.Android.currentActivity;
-		 activity.startActivityForResult(intent, function(e) {
-		 if (e.resultCode == Ti.Android.RESULT_OK) {
-		 var contents = e.intent.getStringExtra("SCAN_RESULT");
-		 var format = e.intent.getStringExtra("SCAN_RESULT_FORMAT");
-		 Ti.UI.createNotification({
-		 message: "Contents: " + contents + ", Format: " + format
-		 }).show();
-		 } else if (e.resultCode == Ti.Android.RESULT_CANCELED) {
-		 Ti.UI.createNotification({
-		 message: "Scan canceled!"
-		 }).show();
-		 }
-		 });
-		 */
+		}		
 	});
 	// for iPhone either use web service or http://code.google.com/p/tibar/
 
@@ -374,7 +354,7 @@ var _home = {};
 				 }*/
 			});
 		} else if(osname == "ipad" || osname == "iphone") {
-			//
+			showQRFallback();
 		}
 	});
 	//win1.add(label1);
