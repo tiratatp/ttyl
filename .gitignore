@@ -1,5 +1,8 @@
 tmp
+*.pyc
 build.log
-build.log
-build.log
-build.log
+Thumbs.db
+build
+Desktop.ini
+.DS_Store
+.metadata

@@ -18,23 +18,33 @@ login.tab = Titanium.UI.createTab({
 
 Titanium.Facebook.appid = '214932645217412';
 Titanium.Facebook.permissions = ['publish_stream'];
+
 Titanium.Facebook.addEventListener('login', function(e) {
     if (e.success) {
         alert('Logged in');
     }
 });
+
+login.setOnLoggedInCallback = function(fn) {
+	Titanium.Facebook.addEventListener('login', fn);	
+};
+
 Titanium.Facebook.addEventListener('logout', function(e) {
     alert('Logged out');
 });
 
+login.setOnLoggedOutCallback = function(fn) {
+	Titanium.Facebook.addEventListener('logout', fn);	
+};
+
 login.loginButton = Titanium.Facebook.createLoginButton({
 	center:{x:'50%',y:'50%'},
 	left:'50%',
-	top:'50%'	
+	top:'50%',
+	style: 'wide',	
 })
 login.loginButton.show();
 login.win.add(login.loginButton);
-
 
 
 // Titanium.win.add(
