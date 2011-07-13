@@ -4,30 +4,63 @@ var ProfileDetail = function()
 		backgroundColor:'#fff'
 	});
 	var win = this.win;
+	win.rightNavButton = saveButton();
 	
 	var table1 =  Titanium.UI.createTableView({
 		style:Titanium.UI.iPhone.TableViewStyle.GROUPED
 	});
 
-	var section1 = Titanium.UI.createTableViewSection();
-	section1.headerTitle = "Visibility";
-	var row1 = Titanium.UI.createTableViewRow({title:"Friends"});
-	var row2 = Titanium.UI.createTableViewRow({title:"Followers"});
-	row1.addEventListener('click', function(e)
-	{
-		win.close();
-	});
-	row2.addEventListener('click', function()
-	{
-		win.close();
-	});
-	section1.add(row1);
-	section1.add(row2);
-	
+	section1 = createVisibilitySection();
 	section2 = createOfferSection();
-	table1.setData([section1, section2]);
+	section3 = createSaveSection();
+	
+	table1.setData([section1, section2, section3]);
 	
 	this.win.add(table1);	
+	
+	function saveButton()
+	{
+		var saveButton = Titanium.UI.createButton({
+			systemButton:Titanium.UI.iPhone.SystemButton.SAVE
+		});
+		saveButton.addEventListener('click', function()
+		{
+			//Titanium.UI.createAlertDialog({title:'System Button', message:'SAVE'}).show();
+			win.close();
+		});
+		return saveButton;
+	}
+	
+	function createVisibilitySection()
+	{
+		var visibleValue = ["Friends","Followers"];
+		var section = Titanium.UI.createTableViewSection();
+		section.headerTitle = "Visibility";
+		for(var i=0; i<2; i++)
+		{
+			var row = Titanium.UI.createTableViewRow({title:visibleValue[i]});
+			section.add(row);
+		}
+		section.addEventListener('click', function(e)
+		{
+			section = e.section;
+			count = section.rowCount;
+			index = e.index;
+			for(var i=0; i<count; i++)
+			{
+				var row = section.rows[i];
+				if(i == index)
+				{
+					row.hasCheck = true;
+				}
+				else
+				{
+					row.hasCheck = false;
+				}
+			}
+		});
+		return section;
+	}
 	
 	function createOfferSection()
 	{
@@ -35,13 +68,44 @@ var ProfileDetail = function()
 		section.headerTitle = "Offer";
 	
 		var row = Titanium.UI.createTableViewRow();
+		
+		var label = Titanium.UI.createLabel({
+			text:"Offer this info",
+			font:{fontSize:16,fontWeight:'bold'},
+			width:'auto',
+			textAlign:'left',
+			left: 10
+		});
 	
-		var basicSwitch = Titanium.UI.createSwitch({
-		    value:false
+		var offerSwitch = Titanium.UI.createSwitch({
+		    value: false,
+		    right: 10
 		});
 		
-		row.add(basicSwitch);
+		row.add(label);
+		row.add(offerSwitch);
 		
+		section.add(row);
+		
+		return section;
+	}
+	
+	function createSaveSection()
+	{
+		var section = Titanium.UI.createTableViewSection();
+		var row = Titanium.UI.createTableViewRow();
+		var label = Titanium.UI.createLabel({
+			text:"Save",
+			font:{fontSize:16,fontWeight:'bold'},
+			textAlign:'center',
+		});
+		
+		row.addEventListener('click', function(e)
+		{
+			win.close();
+		});
+		
+		row.add(label);
 		section.add(row);
 		
 		return section;
