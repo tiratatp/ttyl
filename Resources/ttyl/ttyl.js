@@ -20,6 +20,7 @@ if(Titanium.Facebook.loggedIn) {
 
 tabGroup.addTab(_home.tab);
 tabGroup.addTab(feed.tab);
+profile = new Profile();
 tabGroup.addTab(profile.tab);
 
 // open tab group
