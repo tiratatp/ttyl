@@ -23,7 +23,27 @@ var ProfileDetail = function()
 	});
 	section1.add(row1);
 	section1.add(row2);
-	table1.setData([section1]);
+	
+	section2 = createOfferSection();
+	table1.setData([section1, section2]);
 	
 	this.win.add(table1);	
+	
+	function createOfferSection()
+	{
+		var section = Titanium.UI.createTableViewSection();
+		section.headerTitle = "Offer";
+	
+		var row = Titanium.UI.createTableViewRow();
+	
+		var basicSwitch = Titanium.UI.createSwitch({
+		    value:false
+		});
+		
+		row.add(basicSwitch);
+		
+		section.add(row);
+		
+		return section;
+	}
 }

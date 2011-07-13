@@ -4,7 +4,7 @@ Ti.include('/ttyl/profile/detail.js');
 
 //Namespace
 var Profile = function()
-{
+{	
 	this.win = Titanium.UI.createWindow({
 		title:'Profile',
 		backgroundColor:'#fff'
