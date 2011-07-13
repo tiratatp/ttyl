@@ -2,8 +2,8 @@
 
 Ti.include('/ttyl/profile/detail.js');
 Ti.include('/ttyl/profile/addType.js');
+Ti.include('/ttyl/profile/model/profileModel.js');
 
-//Namespace
 var Profile = function()
 {	
 	this.win = Titanium.UI.createWindow({
@@ -21,33 +21,83 @@ var Profile = function()
 	var TheTable = Titanium.UI.createTableView({});
 	
 	
+	profileModel = new ProfileModel();
+	var CustomData = profileModel.getData();
 	
-	var CustomData = [
-		{icon:'/images/icons/email.png', value:'plub101@gmail.com', visibility:'offer'},
-		{icon:'/images/icons/facebook.png', value:'Plub Wittawin', visibility:'private'},
-		{icon:'/images/icons/twitter.png', value:'plub', visibility:'public'},
-		{icon:'/images/icons/foursquare.png', value:'plub101', visibility:'private'}
-	];
+	var infoSection = createInfoSection();
+	var addSection = createAddSection();
 	
 	
+	TheTable.setData([infoSection, addSection]);
 	
+	this.win.add(TheTable);
 	
-	var data=[];
+	function createInfoSection()
+	{
+		var section = Titanium.UI.createTableViewSection();
+		
+		for (var i = 0; i <= CustomData.length - 1; i++){
 	
-	for (var i = 0; i <= CustomData.length - 1; i++){
-	
-		var row = Titanium.UI.createTableViewRow();
-	
-		var icon =  Titanium.UI.createImageView({
-			image:CustomData[i].icon,
-			width:32,
-			height:32,
-			left:4,
-			top:9
+			var row = Titanium.UI.createTableViewRow();
+			
+			row.id = CustomData[i].id;
+		
+			var icon =  Titanium.UI.createImageView({
+				image:getInfoIcon(CustomData[i].infotype),
+				width:32,
+				height:32,
+				left:4,
+				top:9
+			});
+			
+			var value = Titanium.UI.createLabel({
+				text:CustomData[i].value,
+				font:{fontSize:16,fontWeight:'bold'},
+				width:'auto',
+				textAlign:'left',
+				top:13,
+				left:40,
+				height:24
+			});
+			
+			var visibility =  Titanium.UI.createLabel({
+				text:CustomData[i].visibility,
+				font:{fontSize:12},
+				width:'auto',
+				textAlign:'left',
+				top:13,
+				right:30,
+				height:24
+			});
+			
+			row.add(icon);
+			row.add(value);
+			row.add(visibility);
+		
+			row.hasChild=true;
+			row.className = 'profile_row';
+			
+			section.add(row);
+		}
+		
+		section.addEventListener('click', function(e)
+		{
+			var id = e.row.id;
+			var profileDetail = new ProfileDetail(id);
+			tabGroup.activeTab.open(profileDetail.win);
 		});
 		
+		return section;
+	}
+	
+	function createAddSection()
+	{
+		var section = Titanium.UI.createTableViewSection();
+		
+		var row = Titanium.UI.createTableViewRow();
+		
 		var value = Titanium.UI.createLabel({
-			text:CustomData[i].value,
+			text:"Add...",
 			font:{fontSize:16,fontWeight:'bold'},
 			width:'auto',
 			textAlign:'left',
@@ -55,59 +105,20 @@ var Profile = function()
 			left:40,
 			height:24
 		});
-		
-		var visibility =  Titanium.UI.createLabel({
-			text:CustomData[i].visibility,
-			font:{fontSize:12},
-			width:'auto',
-			textAlign:'left',
-			top:13,
-			right:30,
-			height:24
-		});
-		
-		row.add(icon);
+			
 		row.add(value);
-		row.add(visibility);
-	
-		row.hasChild=true;
-		row.addEventListener('click', function()
-		{
-			openSocialDetailWin(value.text);
+		row.addEventListener('click', function(){
+			var addTypeWin = new AddServiceTypeWindow();
+			tabGroup.activeTab.open(addTypeWin.win);
 		});
-		row.className = 'profile_row';
-	
-	
-		data.push(row);
-	};
-	
-	var addRow = Titanium.UI.createTableViewRow();
-	
-	var value = Titanium.UI.createLabel({
-		text:"Add...",
-		font:{fontSize:16,fontWeight:'bold'},
-		width:'auto',
-		textAlign:'left',
-		top:13,
-		left:40,
-		height:24
-	});
 		
-	addRow.add(value);
-	addRow.addEventListener('click', function(){
-		var addTypeWin = new AddServiceTypeWindow();
-		tabGroup.activeTab.open(addTypeWin.win);
-	});
-	
-	data.push(addRow);
-	
-	function openSocialDetailWin(value)
-	{
-		var profileDetail = new ProfileDetail();
-		tabGroup.activeTab.open(profileDetail.win);
+		section.add(row);
+		return section;
 	}
 	
-	TheTable.setData(data);
-	
-	this.win.add(TheTable);
+	function getInfoIcon(infoType)
+	{
+		var icon = "/images/icons/" + infoType + ".png";
+		return icon;
+	}
 }

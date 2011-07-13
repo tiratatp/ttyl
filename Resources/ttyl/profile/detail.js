@@ -1,5 +1,8 @@
-var ProfileDetail = function()
+var ProfileDetail = function(id)
 {
+	var profileModel = new ProfileModel();
+	var data = profileModel.getDataById(id);
+	 
 	this.win = Titanium.UI.createWindow({
 		backgroundColor:'#fff'
 	});
@@ -10,8 +13,8 @@ var ProfileDetail = function()
 		style:Titanium.UI.iPhone.TableViewStyle.GROUPED
 	});
 
-	section1 = createVisibilitySection();
-	section2 = createOfferSection();
+	section1 = createVisibilitySection(data.visibility);
+	section2 = createOfferSection(data.offer);
 	section3 = createSaveSection();
 	
 	table1.setData([section1, section2, section3]);
@@ -31,14 +34,21 @@ var ProfileDetail = function()
 		return saveButton;
 	}
 	
-	function createVisibilitySection()
+	function createVisibilitySection(type)
 	{
-		var visibleValue = ["Friends","Followers"];
+		var visibility = [
+			{type:'friends', value:'Friends'},
+			{type:'followers', value:'Followers'}
+		];
 		var section = Titanium.UI.createTableViewSection();
 		section.headerTitle = "Visibility";
-		for(var i=0; i<2; i++)
+		for(var i=0; i<visibility.length; i++)
 		{
-			var row = Titanium.UI.createTableViewRow({title:visibleValue[i]});
+			var row = Titanium.UI.createTableViewRow({title:visibility[i].value});
+			if(type == visibility[i].type)
+			{
+				row.hasCheck = true;
+			}
 			section.add(row);
 		}
 		section.addEventListener('click', function(e)
@@ -62,7 +72,7 @@ var ProfileDetail = function()
 		return section;
 	}
 	
-	function createOfferSection()
+	function createOfferSection(offer)
 	{
 		var section = Titanium.UI.createTableViewSection();
 		section.headerTitle = "Offer";
@@ -81,6 +91,11 @@ var ProfileDetail = function()
 		    value: false,
 		    right: 10
 		});
+		
+		if(offer)
+		{
+			offerSwitch.value = true;
+		}
 		
 		row.add(label);
 		row.add(offerSwitch);
