@@ -1,6 +1,7 @@
 //Profile
 
 Ti.include('/ttyl/profile/detail.js');
+Ti.include('/ttyl/profile/addType.js');
 
 //Namespace
 var Profile = function()
@@ -93,6 +94,10 @@ var Profile = function()
 	});
 		
 	addRow.add(value);
+	addRow.addEventListener('click', function(){
+		var addTypeWin = new AddServiceTypeWindow();
+		tabGroup.activeTab.open(addTypeWin.win);
+	});
 	
 	data.push(addRow);
 	
