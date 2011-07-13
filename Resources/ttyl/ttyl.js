@@ -19,6 +19,7 @@ if(Titanium.Facebook.loggedIn) {
 }
 
 tabGroup.addTab(_home.tab);
+feed.init();
 tabGroup.addTab(feed.tab);
 profile = new Profile();
 tabGroup.addTab(profile.tab);
