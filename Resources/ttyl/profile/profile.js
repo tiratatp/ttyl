@@ -83,7 +83,7 @@ var Profile = function()
 	var addRow = Titanium.UI.createTableViewRow();
 	
 	var value = Titanium.UI.createLabel({
-		text:"Add More",
+		text:"Add...",
 		font:{fontSize:16,fontWeight:'bold'},
 		width:'auto',
 		textAlign:'left',

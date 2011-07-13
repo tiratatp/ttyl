@@ -11,9 +11,10 @@ var ProfileDetail = function()
 	});
 
 	section1 = createVisibilitySection();
-	
 	section2 = createOfferSection();
-	table1.setData([section1, section2]);
+	section3 = createSaveSection();
+	
+	table1.setData([section1, section2, section3]);
 	
 	this.win.add(table1);	
 	
@@ -57,16 +58,6 @@ var ProfileDetail = function()
 					row.hasCheck = false;
 				}
 			}
-			/*
-			var row = e.row;
-			if(row.hasCheck == true)
-			{
-				row.hasCheck = false;
-			}
-			else
-			{
-				row.hasCheck = true;
-			}*/
 		});
 		return section;
 	}
@@ -94,6 +85,27 @@ var ProfileDetail = function()
 		row.add(label);
 		row.add(offerSwitch);
 		
+		section.add(row);
+		
+		return section;
+	}
+	
+	function createSaveSection()
+	{
+		var section = Titanium.UI.createTableViewSection();
+		var row = Titanium.UI.createTableViewRow();
+		var label = Titanium.UI.createLabel({
+			text:"Save",
+			font:{fontSize:16,fontWeight:'bold'},
+			textAlign:'center',
+		});
+		
+		row.addEventListener('click', function(e)
+		{
+			win.close();
+		});
+		
+		row.add(label);
 		section.add(row);
 		
 		return section;
