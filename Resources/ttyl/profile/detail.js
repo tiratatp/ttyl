@@ -4,6 +4,7 @@ var ProfileDetail = function()
 		backgroundColor:'#fff'
 	});
 	var win = this.win;
+	win.rightNavButton = saveButton();
 	
 	var table1 =  Titanium.UI.createTableView({
 		style:Titanium.UI.iPhone.TableViewStyle.GROUPED
@@ -15,6 +16,19 @@ var ProfileDetail = function()
 	table1.setData([section1, section2]);
 	
 	this.win.add(table1);	
+	
+	function saveButton()
+	{
+		var saveButton = Titanium.UI.createButton({
+			systemButton:Titanium.UI.iPhone.SystemButton.SAVE
+		});
+		saveButton.addEventListener('click', function()
+		{
+			//Titanium.UI.createAlertDialog({title:'System Button', message:'SAVE'}).show();
+			win.close();
+		});
+		return saveButton;
+	}
 	
 	function createVisibilitySection()
 	{
