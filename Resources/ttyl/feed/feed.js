@@ -75,14 +75,13 @@ var feed = {
 				width:'auto',
 				textAlign:'left',
 				top:13,
-				left:60,
+				left:70,
 				height:24
 			});
 			
 			rowView.add(leftImage);
 			rowView.add(title);
 			row.add(rowView);
-			row.hasDetail=true;
 			f.data.push(row)
 		}
 		//bind event
@@ -103,7 +102,9 @@ var feed = {
 				var button1 = Ti.UI.createButton({
 					title: "View Offer",
 					right: 5,
-					bottom: 0
+					bottom: 0,
+					width: 100,
+					height: 50
 				});
 				
 				button1.addEventListener('click',function(e){
