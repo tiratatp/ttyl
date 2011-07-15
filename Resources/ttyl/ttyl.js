@@ -3,14 +3,14 @@ Ti.include('/ttyl/login/login.js');
 Ti.include('/ttyl/feed/feed.js')
 Ti.include('/ttyl/profile/profile.js')
 // create tab group
-
-var loginTabGroup = Titanium.UI.createTabGroup();
+// var loginTabGroup = Titanium.UI.createTabGroup();
 var tabGroup = Titanium.UI.createTabGroup();
 
-loginTabGroup.addTab(login.tab);
+// loginTabGroup.addTab(login.tab);
 
 login.setOnLoggedInCallback(function() {
-	loginTabGroup.hide();
+	// loginTabGroup.hide();
+	login.win.close();
 	tabGroup.open();
 });
 
@@ -24,5 +24,6 @@ tabGroup.addTab(feed.tab);
 profile = new Profile();
 tabGroup.addTab(profile.tab);
 
-// open tab group
-loginTabGroup.open();
+// open login window
+// loginTabGroup.open();
+login.win.open();
