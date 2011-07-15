@@ -5,108 +5,122 @@ Titanium.UI.setBackgroundColor('#FFF');
 
 
 //namespace
-var feed = {};
-
-//var
-feed.win = null;
-feed.tab = null;
-feed.table = null;
-feed.data = [];
-feed.rowHeight = 50;
-feed.rowHeightExpanded = 100;
-feed.bgColor = "#FFF";
-feed.bgColorExpanded = "#444";
-feed.activeRow = null;
-
-feed.init_data = [
-	{leftImage:'', title:"" },
-	{leftImage:'', title:"" },
-	{leftImage:'', title:"" },
-	{leftImage:'', title:"" },
-	{leftImage:'', title:"" },
-	{leftImage:'', title:"" }
-];
-
-
-//init var
-feed.win = Ti.UI.createWindow({
-	title: "Stream",
-	backgroundColor: feed.bgColor
-});
-feed.tab = Ti.UI.createTab({
-	window: feed.win,
-	title: "Feed",
-	icon: 'KS_nav_views.png'
-});
-feed.table = Ti.UI.createTableView({});
-
-
-
-//row process
-for (var i = feed.init_data.length - 1; i >= 0; i--) {
-	var row = Ti.UI.createTableViewRow({height:feed.rowHeight,backgroundColor:feed.bgColor});
-	var rowView = Ti.UI.createView({
-		height:"100%",
-		top:0
-	});
+var feed = {
+	// view object
+	tab: null,
+	win: null,
+	table: null,
+	// mem
+	data: [],
+	activeRow: null,
+	customData: [],
 	
-	var leftImage = Ti.UI.createImageView({
-		image:'ggf.JPG',
-		width: 50,
-		left:"5%"
-	});
-	var title = Ti.UI.createLabel({
-		text:"You have met Mr.P!",
-		font: {
-			fontSize:16,
-			fontWeight:'bold'
-		},
-		width:'auto',
-		textAlign:'left',
-		left:"30%",
-		top:"10%"
-	});
+	// config
+	rowHeight: 50,
+	rowHeight2: 100,
+	bgColor: "#FFF",
+	bgColor2: "#222",
 	
-	rowView.add(leftImage);
-	rowView.add(title);
-	row.add(rowView);
-	row.hasDetail=true;
-	feed.data.push(row)
-}
-
-//bind event
-feed.table.addEventListener('click',function(e){
-	Ti.API.info("index of row : " + e.index);
-	if(e.index>=0){
-		if(feed.activeRow != null){
-			feed.activeRow.height=feed.rowHeight;
-			feed.activeRow.children[0].height=feed.rowHeight;
-			feed.activeRow.remove(feed.activeRow.children[1]);
-			feed.activeRow.backgroundColor = feed.bgColor;
-		}
-		feed.activeRow = e.row;
-		
-		var rowButtonView = Ti.UI.createView({
-			bottom: 0
+	//constructor
+	init: function(){
+		var f = this;
+		//init data
+		f.customData = [
+			{leftImage:'ggf.JPG', title:"You have met Mr.P!" },
+			{leftImage:'ggf.JPG', title:"You have met Mr.P!" },
+			{leftImage:'ggf.JPG', title:"You have met Mr.P!" },
+			{leftImage:'ggf.JPG', title:"You have met Mr.P!" },
+			{leftImage:'ggf.JPG', title:"You have met Mr.P!" },
+			{leftImage:'ggf.JPG', title:"You have met Mr.P!" }
+		];
+		//init view
+		f.win = Ti.UI.createWindow({
+			title: "Stream",
+			backgroundColor: f.bgColor
 		});
-		var button1 = Ti.UI.createButton({
-			title: "View Offer",
-			right: 5,
-			bottom: 0
+		f.tab = Ti.UI.createTab({
+			window: f.win,
+			title: "Feed",
+			icon: 'KS_nav_views.png'
 		});
+		f.table = Ti.UI.createTableView({});
 		
-		button1.addEventListener('click',function(e){
+		f.renderRow();
+		
+		//bind data
+		feed.table.setData(feed.data);
+		feed.win.add(feed.table);
+		
+	},
+	
+	//row process
+	renderRow: function(){
+		var f = this;
+		//temp render data
+		for (var i = f.customData.length - 1; i >= 0; i--) {
+			var row = Ti.UI.createTableViewRow({height:f.rowHeight,backgroundColor:f.bgColor});
+			var rowView = Ti.UI.createView({
+				height:"100%",
+				top:0
+			});
 			
+			var leftImage = Ti.UI.createImageView({
+				image:f.customData[i].leftImage,
+				width: 50,
+				left:"5%"
+			});
+			var title = Ti.UI.createLabel({
+				text:f.customData[i].title,
+				font:{fontSize:16,fontWeight:'bold'},
+				width:'auto',
+				textAlign:'left',
+				top:13,
+				left:60,
+				height:24
+			});
+			
+			rowView.add(leftImage);
+			rowView.add(title);
+			row.add(rowView);
+			row.hasDetail=true;
+			f.data.push(row)
+		}
+		//bind event
+		f.table.addEventListener('click',function(e){
+			if(e.index>=0 && f.activeRow != e.row){
+				Ti.API.info("index of row : " + e.index);
+				if(f.activeRow != null){
+					f.activeRow.height=f.rowHeight;
+					f.activeRow.children[0].height=f.rowHeight;
+					f.activeRow.remove(f.activeRow.children[1]);
+					f.activeRow.backgroundColor = f.bgColor;
+				}
+				f.activeRow = e.row;
+				
+				var rowButtonView = Ti.UI.createView({
+					bottom: 0
+				});
+				var button1 = Ti.UI.createButton({
+					title: "View Offer",
+					right: 5,
+					bottom: 0
+				});
+				
+				button1.addEventListener('click',function(e){
+					alert('this is offer!');
+				});
+				
+				rowButtonView.add(button1);
+				f.activeRow.height = f.rowHeight2;
+				f.activeRow.backgroundColor = f.bgColor2;
+				f.activeRow.children[0].height = f.rowHeight2;
+				f.activeRow.add(rowButtonView);
+			}
 		});
-		
-		rowButtonView.add(button1);
-		feed.activeRow.height = feed.rowHeightExpanded;
-		feed.activeRow.backgroundColor = feed.bgColorExpanded;
-		feed.activeRow.children[0].height = feed.rowHeightExpanded;
-		feed.activeRow.add(rowButtonView);
+	},
+	
+	//temporary
+	addRow: function(){
+		this.data.push({leftImage:'ggf.JPG', title:"You have met Mr.P!" });
 	}
-});
-
-//bind data
-feed.table.setData(feed.data);
-feed.win.add(feed.table);
+};
