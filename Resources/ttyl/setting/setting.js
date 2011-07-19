@@ -12,10 +12,12 @@ var Setting = function()
 		title:'Setting',
 		window:this.win
 	});	
+	var menuList = [{title:"Logout"}];
+	var settingTable = Titanium.UI.createTableView({
+		data:menuList
+	});	
 	
-	var settingTable = Titanium.UI.createTableView({});
 	
-	var logoutRow = Titanium.UI.createTableViewRow({});
 	// logoutRow.add(Titanium.UI.createLabel({
 		// text:'Logout'
 	// }));
