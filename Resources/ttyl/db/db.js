@@ -75,8 +75,26 @@ var _db = {};
 			data:data
 		}, callback);
 	};
-	_db.onMeet = function(data, callback) {
+	_db.upsert = function(data, callback) {
 		
+		connect({
+			method:"POST",
+			data:data
+		}, callback);
+	};
+	_db.onMeet = function(person_id, callback) {
+		var timestamp = new Date().getTime();
+		_db.create({
+			type:'meet',
+			person_id1:_db.person_id,
+			person_id2:person_id,
+			created_datetime:timestamp,
+			place_id:test,
+		}, function(data) {
+			if(callback) {
+				callback(data);
+			}
+		});	
 	};
 	_db.onLoggedIn = function(e, callback) {
 		Titanium.API.info(' _db.onLoggedIn: ' + e.success + ' '+ e.uid);

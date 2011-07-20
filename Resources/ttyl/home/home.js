@@ -14,6 +14,12 @@ var _home = {};
 	var isLocationReady = false;
 
 	var isSetLocationCallback = false;
+	
+	function generatePersonIdHash(person_id) {
+		var daysSinceEpoch = Math.floor((new Date()).getTime() / 86400000);
+		var hash = Titanium.Codec.digestHMACToHex(Titanium.Codec.SHA1, person_id, "Fibosoft_TTYL_2011" + daysSinceEpoch);
+		return hash;		
+	}
 
 	function getLocation() {
 		if(isSetLocationCallback) {
@@ -189,15 +195,28 @@ var _home = {};
 
 	init.addEventListener("click", function() {
 		function onQRRead(barcode) {
+			function onError(error) {
+				// error
+			}	
+		
 			var label = Titanium.UI.createLabel({
 				text:'Barcode: ' + barcode,
 				textAlign:'center',
 				width:'auto'
 			});
 			win.add(label);
-			var HTTPClient = Titanium.Network.createHTTPClient({
-				connectionType: 'POST',
-				location: "https://fibottyl.appspot.com/checkin",
+			var components = barcode.split(":");
+			if(components.length!=2) {
+				onError();
+			}
+			var person_id = components[0];
+			var hash = components[1];
+			var real_hash = generatePersonIdHash(person_id);
+			if(real_hash!=hash) {
+				onError();
+			}
+			_db.onMeet(person_id, function() {
+				// success
 			});
 		}
 
@@ -253,9 +272,8 @@ var _home = {};
 	}
 	
 	function getPersonIdWithHash() {
-		var daysSinceEpoch = (new Date()).getTime() / 86400000;
 		var person_id = getPersonId();
-		var hash = Titanium.Codec.digestHMACToHex(Titanium.Codec.SHA1, person_id, "Fibosoft_TTYL_2011" + daysSinceEpoch);
+		var hash = generatePersonIdHash(person_id);
 		return person_id+':'+hash;		
 	}
 
