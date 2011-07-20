@@ -7,6 +7,8 @@ var _db = {};
 (function() {
 	var base_url = "https://nuttyknot:tiratat@ttyl.iriscouch.com/ttyl/",
 	xhr = Titanium.Network.createHTTPClient();
+	
+	_db.person_id = undefined;
 
 	function connect(options, callback) {
 		/*
@@ -72,7 +74,10 @@ var _db = {};
 			method:"POST",
 			data:data
 		}, callback);
-	}
+	};
+	_db.onMeet = function(data, callback) {
+		
+	};
 	_db.onLoggedIn = function(e, callback) {
 		Titanium.API.info(' _db.onLoggedIn: ' + e.success + ' '+ e.uid);
 		if(!e.uid) {

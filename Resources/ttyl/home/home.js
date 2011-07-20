@@ -160,7 +160,7 @@ var _home = {};
 		color:'#999',
 		title:'Init',
 		font: {
-			fontSize:20,
+			fontSize:30,
 			fontFamily:'Helvetica Neue'
 		},
 		textAlign:'center',
@@ -176,7 +176,7 @@ var _home = {};
 		color:'#999',
 		title:'Receive',
 		font: {
-			fontSize:20,
+			fontSize:30,
 			fontFamily:'Helvetica Neue'
 		},
 		textAlign:'center',
@@ -188,48 +188,6 @@ var _home = {};
 	});
 
 	init.addEventListener("click", function() {
-		/*Titanium.Media.showCamera({
-		 success:function(event)
-		 {
-		 var image = event.media;
-
-		 Ti.API.debug('Our type was: '+event.mediaType);
-		 if(event.mediaType == Ti.Media.MEDIA_TYPE_PHOTO)
-		 {
-		 var imageView = Ti.UI.createImageView({width:win1.width,height:win1.height,image:event.media});
-		 win1.add(imageView);
-		 }
-		 else
-		 {
-		 alert("got the wrong type back ="+event.mediaType);
-		 }
-		 },
-		 cancel:function()
-		 {
-		 alert('You canceled the action.');
-		 },
-		 error:function(error)
-		 {
-		 // create alert
-		 var a = Titanium.UI.createAlertDialog({title:'Camera'});
-
-		 // set message
-		 if (error.code == Titanium.Media.NO_CAMERA)
-		 {
-		 a.setMessage('Please run this test on device');
-		 }
-		 else
-		 {
-		 a.setMessage('Unexpected error: ' + error.code);
-		 }
-
-		 // show alert
-		 a.show();
-		 },
-		 saveToPhotoGallery:true,
-		 allowEditing:true,
-		 mediaTypes:[Ti.Media.MEDIA_TYPE_PHOTO],
-		 })*/
 		function onQRRead(barcode) {
 			var label = Titanium.UI.createLabel({
 				text:'Barcode: ' + barcode,
@@ -278,82 +236,82 @@ var _home = {};
 						onQRRead(data.barcode);
 					}
 				},/*
-				cancel: function() {
-					Ti.API.info('TiBar cancel callback!');
-				},
-				error: function() {
-					Ti.API.info('TiBar error callback!');
-				}*/
+				 cancel: function() {
+				 Ti.API.info('TiBar cancel callback!');
+				 },
+				 error: function() {
+				 Ti.API.info('TiBar error callback!');
+				 }*/
 			});
 			//
-		}		
+		}
 	});
 	// for iPhone either use web service or http://code.google.com/p/tibar/
-
-	function showQRFallback(str) {
-		str = "me@nuttyknot.com";
-		var url = "https://chart.googleapis.com/chart?cht=qr&chl="+Titanium.Network.encodeURIComponent(str)+"&chs="+win.width+"x"+win.height;
-		var imageView = Ti.UI.createImageView({
-			width:win.width,
-			height:win.height,
-			image:url,
-			top:0,
-			left:0,
-			zIndex:100,
-		});
-		var invite = Titanium.UI.createLabel({
-			text:'Invite other to scan this QR code',
-			color:"#000",
-			textAlign:'center',
-			width:'auto',
-			top:"80%",
-			font: {
-				fontSize:20,
-				fontFamily:'Helvetica Neue'
-			},
-			zIndex:1000,
-		});
-
-		var win2 = Titanium.UI.createWindow({
-			title:'QR Code',
-			backgroundColor:'#fff'
-		});
-		win2.add(invite);
-		win2.add(imageView);
-		imageView.addEventListener('click', function() {
-			win2.close();
-			//this.remove();
-		});
-		Ti.UI.currentTab.open(win2);
-		//https://chart.googleapis.com/chart?cht=qr&chl=Hello+world&chs=200x200
+	
+	function getPersonId() {
+		return _db.person_id;
+	}
+	
+	function getPersonIdWithHash() {
+		var daysSinceEpoch = (new Date()).getTime() / 86400000;
+		var person_id = getPersonId();
+		var hash = Titanium.Codec.digestHMACToHex(Titanium.Codec.SHA1, person_id, "Fibosoft_TTYL_2011" + daysSinceEpoch);
+		return person_id+':'+hash;		
 	}
 
 	receive.addEventListener('click', function() {
+		var qr_str = getPersonIdWithHash();		
+		function showQRFallback() {
+			var url = "https://chart.googleapis.com/chart?cht=qr&chl="+Titanium.Network.encodeURIComponent(qr_str)+"&chs="+win.width+"x"+win.height;
+			var imageView = Ti.UI.createImageView({
+				width:win.width,
+				height:win.height,
+				image:url,
+				top:0,
+				left:0,
+				zIndex:100,
+			});
+			var invite = Titanium.UI.createLabel({
+				text:'Invite other to scan this QR code',
+				color:"#000",
+				textAlign:'center',
+				width:'auto',
+				top:"80%",
+				font: {
+					fontSize:20,
+					fontFamily:'Helvetica Neue'
+				},
+				zIndex:1000,
+			});
+
+			var win2 = Titanium.UI.createWindow({
+				title:'QR Code',
+				backgroundColor:'#fff'
+			});
+			win2.add(invite);
+			win2.add(imageView);
+			imageView.addEventListener('click', function() {
+				win2.close();
+				//this.remove();
+			});
+			Ti.UI.currentTab.open(win2);
+			//https://chart.googleapis.com/chart?cht=qr&chl=Hello+world&chs=200x200
+		}
+
 		if(osname == "android") {
 			var intent = Ti.Android.createIntent({
 				action: "com.google.zxing.client.android.ENCODE"
 			});
 			intent.putExtra("ENCODE_TYPE", "TEXT_TYPE");
-			intent.putExtra("ENCODE_DATA", "me@nuttyknot.com");
+			intent.putExtra("ENCODE_DATA", qr_str);
 			var activity = Ti.Android.currentActivity;
 			activity.startActivityForResult(intent, function(e) {
 				if ("error" in e) {
 					showQRFallback();
 					return;
 				}
-				/*if (e.resultCode == Ti.Android.RESULT_OK) {
-				 var contents = e.intent.getStringExtra("SCAN_RESULT");
-				 var format = e.intent.getStringExtra("SCAN_RESULT_FORMAT");
-				 Ti.UI.createNotification({
-				 message: "Contents: " + contents + ", Format: " + format
-				 }).show();
-				 } else if (e.resultCode == Ti.Android.RESULT_CANCELED) {
-				 Ti.UI.createNotification({
-				 message: "Scan canceled!"
-				 }).show();
-				 }*/
 			});
-		} else if(osname == "ipad" || osname == "iphone") {
+		} else /*if(osname == "ipad" || osname == "iphone")*/ {
 			showQRFallback();
 		}
 	});
