@@ -42,7 +42,20 @@ login.loginButton = Titanium.Facebook.createLoginButton({
 	left:'50%',
 	top:'50%',
 	style: 'wide',	
-})
+});
+
+login.onLoading = function() {
+	login.loginButton.hide();
+	var label = Titanium.UI.createLabel({
+		text:'Loading...',
+		textAlign:'center',
+		width:'auto'
+	});
+	login.win.add(label);
+};
+
+login.loginButton.addEventListener("click",login.onLoading);
+
 login.loginButton.show();
 login.win.add(login.loginButton);
 

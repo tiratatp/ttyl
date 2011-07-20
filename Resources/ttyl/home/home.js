@@ -17,7 +17,8 @@ var _home = {};
 	
 	function generatePersonIdHash(person_id) {
 		var daysSinceEpoch = Math.floor((new Date()).getTime() / 86400000);
-		var hash = Titanium.Codec.digestHMACToHex(Titanium.Codec.SHA1, person_id, "Fibosoft_TTYL_2011" + daysSinceEpoch);
+		//var hash = Crypto.HMAC(Crypto.SHA256, person_id, "Fibosoft_TTYL_2011" + daysSinceEpoch, { asString: true });
+		var hash = b64_hmac_sha1("Fibosoft_TTYL_2011" + daysSinceEpoch,person_id);
 		return hash;		
 	}
 

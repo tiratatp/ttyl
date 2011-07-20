@@ -1,4 +1,6 @@
 Ti.include('/ttyl/utils/json2.js');
+//Ti.include('/ttyl/utils/crypto-sha256-hmac.js');
+Ti.include('/ttyl/utils/sha1.js');
 Ti.include('/ttyl/db/db.js');
 
 Ti.include('/ttyl/home/home.js');
@@ -20,8 +22,8 @@ var tabGroup = Titanium.UI.createTabGroup();
 })();
 */
 
-login.setOnLoggedInCallback(function(e) {
-	login.loginButton.hide();
+login.setOnLoggedInCallback(function(e) {	
+	login.onLoading();
 	Titanium.API.info(' setOnLoggedInCallback : ' + JSON.stringify(e));
 	if(e.type == "login") {
 		e.uid = Titanium.Facebook.uid;
