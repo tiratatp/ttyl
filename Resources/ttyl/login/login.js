@@ -42,7 +42,14 @@ login.loginButton = Titanium.Facebook.createLoginButton({
 	left:'50%',
 	top:'50%',
 	style: 'wide',	
-})
+});
+
+login.onLoading = function() {
+	_utils.showLoading("Logging in");
+};
+
+login.loginButton.addEventListener("click",login.onLoading);
+
 login.loginButton.show();
 login.win.add(login.loginButton);
 

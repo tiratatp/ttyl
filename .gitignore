@@ -6,3 +6,4 @@ build
 Desktop.ini
 .DS_Store
 .metadata
+.fastdev.lock

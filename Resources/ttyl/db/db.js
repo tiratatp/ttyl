@@ -75,13 +75,6 @@ var _db = {};
 			data:data
 		}, callback);
 	};
-	_db.upsert = function(data, callback) {
-		
-		connect({
-			method:"POST",
-			data:data
-		}, callback);
-	};
 	_db.onMeet = function(person_id, callback) {
 		var timestamp = new Date().getTime();
 		_db.create({
@@ -89,7 +82,7 @@ var _db = {};
 			person_id1:_db.person_id,
 			person_id2:person_id,
 			created_datetime:timestamp,
-			place_id:test,
+			place_id:'test',
 		}, function(data) {
 			if(callback) {
 				callback(data);
@@ -115,6 +108,7 @@ var _db = {};
 			if(data.rows.length!=0) {
 				_db.person_id = data.rows[0].id;
 				Titanium.API.info(' _db.onLoggedIn-> logged-in person_id : ' + _db.person_id);
+				callback();
 			} else {
 				var timestamp = new Date().getTime();
 				_db.create({
@@ -130,9 +124,9 @@ var _db = {};
 					Titanium.API.info(' _db.onLoggedIn-> cb : ' + JSON.stringify(data));
 					_db.person_id = data.id;
 					Titanium.API.info(' _db.onLoggedIn-> logged-in person_id : ' + _db.person_id);
+					callback();
 				});								
-			}
-			callback();
+			}			
 		});
 	};
 })();

@@ -59,14 +59,14 @@ var whoMetMeView = function() {
 		top: 20,
 		left: 60
 	});
-	var whomImage = Ti.UI.createImageView({
+	var whoImage = Ti.UI.createImageView({
 		image: '/ttyl/ggf.JPG',
 		width: 32,
 		left: 20
 	});
 	view.add(youLabel);
 	view.add(metLabel);
-	view.add(whomImage);
+	view.add(whoImage);
 }
 
 var whoMetMeView = function() {
