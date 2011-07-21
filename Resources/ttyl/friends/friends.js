@@ -1,10 +1,14 @@
+Titanium.UI.setBackgroundColor('#FFF');
+
 var _friends = {};
 
 (function() {
 
-	// private variable
+	// private variable	
+	var bgColor = "#FFF";
 	var win = Ti.UI.createWindow({
 		title: "Friends",
+		backgroundColor: bgColor
 	});
 	var tab = Ti.UI.createTab({
 		window: win,
@@ -41,7 +45,8 @@ var _friends = {};
 			var datum = data[i];
 			var row = Ti.UI.createTableViewRow({
 				height:50,
-				datum:datum
+				datum:datum,
+				backgroundColor:bgColor,
 			});
 			var rowView = Ti.UI.createView({
 				height:"100%",
