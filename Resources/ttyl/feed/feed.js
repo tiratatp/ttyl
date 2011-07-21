@@ -43,13 +43,28 @@ var feed = {
 			title: "Feed",
 			icon: 'KS_nav_views.png'
 		});
-		f.table = Ti.UI.createTableView({});
-		
+		f.table = Ti.UI.createTableView({top:'10%'});
 		f.renderRow();
 		
+		var addButton = Titanium.UI.createButton({
+			borderColor:'#000',
+			borderWidth:'1.0',
+			color:'#999',
+			title:'Temporary Add',
+			font: {
+				fontSize:30,
+				fontFamily:'Helvetica Neue'
+			},
+			textAlign:'center',
+			backgroundColor:'#fff',
+			top:0,
+			left:'5%',
+			height:'10%',
+			width:'100%',
+		});
 		//bind data
-		feed.table.setData(feed.data);
-		feed.win.add(feed.table);
+		f.win.add(addButton)
+		f.win.add(f.table);
 		
 	},
 	
@@ -75,7 +90,7 @@ var feed = {
 				width:'auto',
 				textAlign:'left',
 				top:13,
-				left:60,
+				left:"20%",
 				height:24
 			});
 			
@@ -117,10 +132,13 @@ var feed = {
 				f.activeRow.add(rowButtonView);
 			}
 		});
+		
+		f.table.setData(f.data);
 	},
 	
 	//temporary
 	addRow: function(){
-		this.data.push({leftImage:'ggf.JPG', title:"You have met Mr.P!" });
+		this.customData.push({leftImage:'ggf.JPG', title:"You have met Mr.P!" });
+		this.renderRow();
 	}
 };

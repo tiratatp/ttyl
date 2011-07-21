@@ -1,4 +1,6 @@
+Ti.include('/ttyl/utils/constants.js');
 Ti.include('/ttyl/utils/json2.js');
+Ti.include('/ttyl/utils/jquery-1.6.2.min.js')
 Ti.include('/ttyl/db/db.js');
 
 Ti.include('/ttyl/home/home.js');
