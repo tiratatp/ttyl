@@ -21,20 +21,21 @@ var Profile = function()
 	var TheTable = Titanium.UI.createTableView({});
 	
 	
-	profileModel = new ProfileModel();
+	var profileModel = new ProfileModel();
 	var CustomData = profileModel.getData();
 	
 	var infoSection = createInfoSection();
 	var addSection = createAddSection();
+	var profileSection = createProfileSection();
 	
-	
-	TheTable.setData([infoSection, addSection]);
-	
+	TheTable.setData([profileSection, infoSection, addSection]);
+
 	this.win.add(TheTable);
 	
 	function createInfoSection()
 	{
-		var section = Titanium.UI.createTableViewSection();
+		var section = Titanium.UI.createTableViewSection({
+		});
 		
 		for (var i = 0; i <= CustomData.length - 1; i++){
 	
@@ -113,6 +114,33 @@ var Profile = function()
 		});
 		
 		section.add(row);
+		return section;
+	}
+	
+	function createProfileSection()
+	{
+		var profilePictureUrl = 'https://graph.facebook.com/' + Titanium.Facebook.uid + '/picture';
+
+		var value = Titanium.UI.createLabel({
+			text:"Display Name",
+			font:{fontSize:16,fontWeight:'bold',color:'#fff'},
+			width:'auto',
+			textAlign:'left',
+			top:13,
+			left:40,
+			height:24
+		});
+		
+		var section = Titanium.UI.createTableViewSection();
+		var row = Titanium.UI.createTableViewRow({
+			leftImage: profilePictureUrl,
+			backgroundColor: '#888',
+			height:100
+		});
+		
+		section.add(row);
+		//section.add(value);		
+		
 		return section;
 	}
 	
