@@ -45,13 +45,7 @@ login.loginButton = Titanium.Facebook.createLoginButton({
 });
 
 login.onLoading = function() {
-	login.loginButton.hide();
-	var label = Titanium.UI.createLabel({
-		text:'Loading...',
-		textAlign:'center',
-		width:'auto'
-	});
-	login.win.add(label);
+	_utils.showLoading("Logging in");
 };
 
 login.loginButton.addEventListener("click",login.onLoading);
