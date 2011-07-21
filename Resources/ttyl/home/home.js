@@ -1,25 +1,80 @@
 // this sets the background color of the master UIView (when there are no windows/tab groups on it)
 Titanium.UI.setBackgroundColor('#000');
 
+// namespace
 var _home = {};
 
 (function() {
-	// namespace
-	var osname = Titanium.Platform.osname;
 
 	// private var
+	var osname = Titanium.Platform.osname;
+
 	var longitude = null;
 	var latitude = null;
 	var accuracy = null;
 	var isLocationReady = false;
 
 	var isSetLocationCallback = false;
-	
+
+	// UI
+	var win = Titanium.UI.createWindow({
+		title:'Home',
+		backgroundColor:'#fff'
+	});
+	var tab = Titanium.UI.createTab({
+		icon:'KS_nav_views.png',
+		title:'Home',
+		window:win
+	});
+	// button
+	var init = Titanium.UI.createButton({
+		borderColor:'#000',
+		borderWidth:'1.0',
+		color:'#999',
+		title:'Init',
+		font: {
+			fontSize:30,
+			fontFamily:'Helvetica Neue'
+		},
+		textAlign:'center',
+		backgroundColor:'#fff',
+		top:'5%',
+		left:'5%',
+		height:'40%',
+		width:'90%',
+	});
+	var receive = Titanium.UI.createButton({
+		borderColor:'#000',
+		borderWidth:'1.0',
+		color:'#999',
+		title:'Receive',
+		font: {
+			fontSize:30,
+			fontFamily:'Helvetica Neue'
+		},
+		textAlign:'center',
+		backgroundColor:'#fff',
+		top:'55%',
+		left:'5%',
+		height:'40%',
+		width:'90%',
+	});
+
+	// private functions
+	function getPersonId() {
+		return _db.person_id;
+	}
+
 	function generatePersonIdHash(person_id) {
 		var daysSinceEpoch = Math.floor((new Date()).getTime() / 86400000);
-		//var hash = Crypto.HMAC(Crypto.SHA256, person_id, "Fibosoft_TTYL_2011" + daysSinceEpoch, { asString: true });
 		var hash = b64_hmac_sha1("Fibosoft_TTYL_2011" + daysSinceEpoch,person_id);
-		return hash;		
+		return hash;
+	}
+
+	function getPersonIdWithHash() {
+		var person_id = getPersonId();
+		var hash = generatePersonIdHash(person_id);
+		return person_id+':'+hash;
 	}
 
 	function getLocation() {
@@ -130,7 +185,7 @@ var _home = {};
 			// Titanium.Geolocation.ACCURACY_KILOMETER
 			// Titanium.Geolocation.ACCURACY_THREE_KILOMETERS
 			//
-			Titanium.Geolocation.accuracy = Titanium.Geolocation.ACCURACY_HUNDRED_METERS;
+			Titanium.Geolocation.accuracy = Titanium.Geolocation.ACCURACY_KILOMETER;
 			//
 			//  SET DISTANCE FILTER.  THIS DICTATES HOW OFTEN AN EVENT FIRES BASED ON THE DISTANCE THE DEVICE MOVES
 			//  THIS VALUE IS IN METERS
@@ -147,139 +202,9 @@ var _home = {};
 		}
 	}
 
-	//
-	// create base UI tab and root window
-	//
-	var win = Titanium.UI.createWindow({
-		title:'Home',
-		backgroundColor:'#fff'
-	});
-	var tab = Titanium.UI.createTab({
-		icon:'KS_nav_views.png',
-		title:'Home',
-		window:win
-	});
-
-	// button
-	var init = Titanium.UI.createButton({
-		borderColor:'#000',
-		borderWidth:'1.0',
-		color:'#999',
-		title:'Init',
-		font: {
-			fontSize:30,
-			fontFamily:'Helvetica Neue'
-		},
-		textAlign:'center',
-		backgroundColor:'#fff',
-		top:'5%',
-		left:'5%',
-		height:'40%',
-		width:'90%',
-	});
-	var receive = Titanium.UI.createButton({
-		borderColor:'#000',
-		borderWidth:'1.0',
-		color:'#999',
-		title:'Receive',
-		font: {
-			fontSize:30,
-			fontFamily:'Helvetica Neue'
-		},
-		textAlign:'center',
-		backgroundColor:'#fff',
-		top:'55%',
-		left:'5%',
-		height:'40%',
-		width:'90%',
-	});
-
-	init.addEventListener("click", function() {
-		function onQRRead(barcode) {
-			function onError(error) {
-				// error
-			}	
-		
-			var label = Titanium.UI.createLabel({
-				text:'Barcode: ' + barcode,
-				textAlign:'center',
-				width:'auto'
-			});
-			win.add(label);
-			var components = barcode.split(":");
-			if(components.length!=2) {
-				onError();
-			}
-			var person_id = components[0];
-			var hash = components[1];
-			var real_hash = generatePersonIdHash(person_id);
-			if(real_hash!=hash) {
-				onError();
-			}
-			_db.onMeet(person_id, function() {
-				// success
-			});
-		}
-
-		if(osname == "android") {
-			var titaniumBarcode = require('com.mwaysolutions.barcode');
-			titaniumBarcode.scan({
-				success: function (data) {
-					if(data && data.barcode) {
-						onQRRead(data.barcode);
-					} else {
-						alert(JSON.stringify(data));
-					}
-				},
-				error: function (err) {
-					alert("Error!! " + err);
-				},
-				cancel: function () {
-					//alert("cancel");
-				}
-			});
-		} else if(osname == "ipad" || osname == "iphone") {
-			var TiBar = require('tibar');
-			TiBar.scan({
-				// simple configuration for iPhone simulator
-				configure: {
-					classType: "ZBarReaderController",
-					sourceType: "Album",
-					cameraMode: "Default",
-					symbol: {
-						"QR-Code":true,
-					}
-				},
-				success: function(data) {
-					Ti.API.info('TiBar success callback!');
-					if(data && data.barcode) {
-						onQRRead(data.barcode);
-					}
-				},/*
-				 cancel: function() {
-				 Ti.API.info('TiBar cancel callback!');
-				 },
-				 error: function() {
-				 Ti.API.info('TiBar error callback!');
-				 }*/
-			});
-			//
-		}
-	});
-	// for iPhone either use web service or http://code.google.com/p/tibar/
-	
-	function getPersonId() {
-		return _db.person_id;
-	}
-	
-	function getPersonIdWithHash() {
-		var person_id = getPersonId();
-		var hash = generatePersonIdHash(person_id);
-		return person_id+':'+hash;		
-	}
-
-	receive.addEventListener('click', function() {
-		var qr_str = getPersonIdWithHash();		
+	// public variables
+	_home.tab = tab;
+	_home.showQRCode = function(qr_str) {
 		function showQRFallback() {
 			var url = "https://chart.googleapis.com/chart?cht=qr&chl="+Titanium.Network.encodeURIComponent(qr_str)+"&chs="+win.width+"x"+win.height;
 			var imageView = Ti.UI.createImageView({
@@ -291,7 +216,7 @@ var _home = {};
 				zIndex:100,
 			});
 			var invite = Titanium.UI.createLabel({
-				text:'Invite other to scan this QR code',
+				text:'Invite others to scan this QR code',
 				color:"#000",
 				textAlign:'center',
 				width:'auto',
@@ -302,7 +227,6 @@ var _home = {};
 				},
 				zIndex:1000,
 			});
-
 			var win2 = Titanium.UI.createWindow({
 				title:'QR Code',
 				backgroundColor:'#fff'
@@ -311,10 +235,8 @@ var _home = {};
 			win2.add(imageView);
 			imageView.addEventListener('click', function() {
 				win2.close();
-				//this.remove();
 			});
 			Ti.UI.currentTab.open(win2);
-			//https://chart.googleapis.com/chart?cht=qr&chl=Hello+world&chs=200x200
 		}
 
 		if(osname == "android") {
@@ -330,15 +252,84 @@ var _home = {};
 					return;
 				}
 			});
-		} else /*if(osname == "ipad" || osname == "iphone")*/ {
+		} else {
 			showQRFallback();
 		}
+	};
+	// event listeners
+	init.addEventListener("click", function() {
+		function onError(error) {
+			Ti.API.info('ERROR in init.addEventListener: '+error);
+		}
+
+		function onQRRead(barcode) {
+			_utils.showLoading("Sending to cloud");
+			var label = Titanium.UI.createLabel({
+				text:'Barcode: ' + barcode,
+				textAlign:'center',
+				width:'auto'
+			});
+			win.add(label);
+			var components = barcode.split(":");
+			if(components.length!=2) {
+				onError("component length != 2");
+			}
+			var person_id = components[0];
+			var hash = components[1];
+			var real_hash = generatePersonIdHash(person_id);
+			if(real_hash!=hash) {
+				onError("invalid hash");
+			}
+			_db.onMeet(person_id, function() {
+				_utils.hideLoading();
+			});
+		}
+
+		if(osname == "android") {
+			var titaniumBarcode = require('com.mwaysolutions.barcode');
+			titaniumBarcode.scan({
+				success: function (data) {
+					if(data && data.barcode) {
+						onQRRead(data.barcode);
+					} else {
+						alert(JSON.stringify(data));
+					}
+				},
+				error: function (err) {
+					onError(err);
+				}
+			});
+		} else if(osname == "ipad" || osname == "iphone") {
+			var TiBar = require('tibar');
+			TiBar.scan({
+				// simple configuration for iPhone simulator
+				configure: {
+					classType: "ZBarReaderController",
+					sourceType: "Camera",
+					cameraMode: "Default",
+					symbol: {
+						"QR-Code":true,
+					}
+				},
+				success: function(data) {
+					Ti.API.info('TiBar success callback!');
+					if(data && data.barcode) {
+						onQRRead(data.barcode);
+					}
+				},
+				error: function() {
+					onError();
+				}
+			});
+		}
 	});
-	//win1.add(label1);
+	receive.addEventListener('click', function() {
+		var qr_str = getPersonIdWithHash();
+		_home.showQRCode(qr_str);
+	});
+	// add components to UI
 	win.add(init);
 	win.add(receive);
 
 	getLocation();
-
-	_home.tab = tab;
 })();
