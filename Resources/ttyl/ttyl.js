@@ -1,12 +1,9 @@
 Ti.include('/ttyl/utils/constants.js');
 Ti.include('/ttyl/utils/json2.js');
-<<<<<<< HEAD
 Ti.include('/ttyl/utils/jquery-1.6.2.min.js')
-=======
 Ti.include('/ttyl/utils/sha1.js');
 Ti.include('/ttyl/utils/utils.js');
 
->>>>>>> 7b978501699a92862b38985167956b7ab8b1583c
 Ti.include('/ttyl/db/db.js');
 
 Ti.include('/ttyl/home/home.js');
