@@ -2,13 +2,14 @@
  * @author tiratat.patana-anake
  */
 
-var _db = {};
-
-(function() {
-	var base_url = "https://nuttyknot:tiratat@ttyl.iriscouch.com/ttyl/",
+var _db = new (function() {
+	//var base_url = "https://nuttyknot:tiratat@ttyl.iriscouch.com/ttyl/",
+	var base_url = "https://ttyl.iriscouch.com/ttyl/",
 	xhr = Titanium.Network.createHTTPClient();
-	
-	_db.person_id = undefined;
+
+	this.person_id = undefined;
+	var that = this;
+	var callback = [];
 
 	function connect(options, callback) {
 		/*
@@ -29,7 +30,13 @@ var _db = {};
 			for(var index in options['args']) {
 				var arg = options['args'][index];
 				Ti.API.info('Arg: key->'+arg['key'] +' value->'+arg['value']);
-				url+=(Titanium.Network.encodeURIComponent(arg['key'])+"=\""+Titanium.Network.encodeURIComponent(arg['value'])+"\"&");
+				Ti.API.info('Typeof Arg: key->'+typeof(arg['key']) +' Typeof value->'+typeof(arg['value']));
+				if(typeof(arg['value']) == "string") {
+					url+=(Titanium.Network.encodeURIComponent(arg['key'])+"=\""+Titanium.Network.encodeURIComponent(arg['value'])+"\"&");
+				} else {
+					url+=(Titanium.Network.encodeURIComponent(arg['key'])+"="+Titanium.Network.encodeURIComponent(arg['value'])+"&");
+				}
+
 			}
 		}
 		Titanium.API.info('XHR open: ' + url);
@@ -54,12 +61,12 @@ var _db = {};
 		}
 		xhr.send(data);
 	}
-	
-	_db.getProfileByDisplayName = function(displayName, callback) {
-		
+
+	this.getProfileByDisplayName = function(displayName, callback) {
+
 		//prepare for argument ?key=name@example.com
 		//var arg = [{key:"key", value:displayName}];
-		
+
 		//connect https://ttyl.iriscouch.com/ttyl/_design/person/_view/by_display_name?key="name@example.com"
 		connect({
 			url:"https://ttyl.iriscouch.com/ttyl/_design/person/_view/by_display_name?key=" + '"' + displayName + '"'
@@ -68,7 +75,6 @@ var _db = {};
 			//args:arg,
 		}, callback);
 	};
-
 	/*
 	var uuids=[];
 	connect({
@@ -83,17 +89,33 @@ var _db = {};
 
 	// async-ly create new document in database
 	// data: javscript object
-	_db.create = function(data, callback) {
+	this.create = function(data, callback) {
 		connect({
 			method:"POST",
 			data:data
 		}, callback);
 	};
-	_db.onMeet = function(person_id, callback) {
+	this.addEventListener = function(e, fn) {
+		// e == login, meet
+		if(!callback[e]) {
+			callback[e] = [];
+		}
+		callback[e].push(fn);
+	};
+	function onEvent(e, data) {
+		Titanium.API.info(' _db.onEvent-> event : ' + e);
+		if(!callback[e]) {
+			return;
+		}
+		for(var i=0;i<callback[e].length;i++) {
+			(callback[e])[i].apply(data);
+		}
+	}
+	this.onMeet = function(person_id, callback) {
 		var timestamp = new Date().getTime();
-		_db.create({
+		create({
 			type:'meet',
-			person_id1:_db.person_id,
+			person_id1:this.person_id,
 			person_id2:person_id,
 			created_datetime:timestamp,
 			place_id:'test',
@@ -101,9 +123,10 @@ var _db = {};
 			if(callback) {
 				callback(data);
 			}
-		});	
+			onEvent("meet",data);
+		});
 	};
-	_db.onLoggedIn = function(e, callback) {
+	this.onLoggedIn = function(e, callback) {
 		Titanium.API.info(' _db.onLoggedIn: ' + e.success + ' '+ e.uid);
 		if(!e.uid) {
 			return false;
@@ -120,12 +143,13 @@ var _db = {};
 		}, function (data) {
 			Titanium.API.info(' _db.onLoggedIn-> cb : ' + JSON.stringify(data));
 			if(data.rows.length!=0) {
-				_db.person_id = data.rows[0].id;
-				Titanium.API.info(' _db.onLoggedIn-> logged-in person_id : ' + _db.person_id);
+				that.person_id = data.rows[0].id;
+				Titanium.API.info(' _db.onLoggedIn-> logged-in person_id : ' + this.person_id);
 				callback();
+				onEvent("login");
 			} else {
 				var timestamp = new Date().getTime();
-				_db.create({
+				create({
 					type:'person',
 					display_name:uid,
 					created_datetime:timestamp,
@@ -136,11 +160,30 @@ var _db = {};
 					}]
 				}, function(data) {
 					Titanium.API.info(' _db.onLoggedIn-> cb : ' + JSON.stringify(data));
-					_db.person_id = data.id;
-					Titanium.API.info(' _db.onLoggedIn-> logged-in person_id : ' + _db.person_id);
+					that.person_id = data.id;
+					Titanium.API.info(' _db.onLoggedIn-> logged-in person_id : ' + this.person_id);
 					callback();
-				});								
-			}			
+					onEvent("login");
+				});
+			}
 		});
 	};
+	this.getFriends = function(person_id, callback) {
+		Titanium.API.info(' _db.getFriends-> person_id : ' + person_id);
+		connect({
+			object:"_design/relationship",
+			view:"friends",
+			args: [{
+				key:"key",
+				value:person_id
+			},{
+				key:"include_docs",
+				value:true
+			}]
+		}, function(data) {
+			if(callback) {
+				callback(data);
+			}
+		});
+	}
 })();
