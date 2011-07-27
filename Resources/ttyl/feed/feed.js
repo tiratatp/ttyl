@@ -72,7 +72,7 @@ var feed = {
 		var data = f.customData.getData();
 		for (var i = data.length - 1; i >= 0; i--) {
 			var feedRow = new FeedRow(data[i]);
-			f.data.push(feedRow);
+			f.data.push(feedRow.getRow());
 		}
 		
 		f.table.setData(f.data);

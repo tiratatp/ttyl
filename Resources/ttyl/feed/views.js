@@ -2,27 +2,26 @@
  * @author Flash
  */
 var IMetWhomView = function() {
-	var view = Ti.UI.createView();
+	var view = Ti.UI.createViewRow();
 	var youLabel = Ti.UI.createLabel({
-		text: 'YOU',
+		text: 'You',
 		font: {
-			fontSize:30,
+			fontSize:15,
 			fontFamily:'Helvetica Neue',
-			fontWeight:900
+			fontWeight:'bold'
 		},
 		color: '#32cd32',
-		top: 20,
+		top: 5,
 		left: 20
 	});
 	var metLabel = Ti.UI.createLabel({
 		text: 'met',
 		font: {
-			fontSize:30,
-			fontFamily:'Helvetica Neue',
-			fontWeight:500
+			fontSize:15,
+			fontFamily:'Helvetica Neue'
 		},
 		color: '#000000',
-		top: 20,
+		top: 5,
 		left: 60
 	});
 	var whomImage = Ti.UI.createImageView({
@@ -38,27 +37,26 @@ var IMetWhomView = function() {
 };
 
 var WhoMetMeView = function() {
-	var view = Ti.UI.createView();
+	var view = Ti.UI.createViewRow();
 	var youLabel = Ti.UI.createLabel({
 		text: 'YOU',
 		font: {
-			fontSize:30,
+			fontSize:15,
 			fontFamily:'Helvetica Neue',
-			fontWeight:900
+			fontWeight:'bold'
 		},
 		color: '#32cd32',
-		top: 20,
+		top: 5,
 		left: 100
 	});
 	var metLabel = Ti.UI.createLabel({
 		text: 'met',
 		font: {
-			fontSize:30,
-			fontFamily:'Helvetica Neue',
-			fontWeight:500
+			fontSize:15,
+			fontFamily:'Helvetica Neue'
 		},
 		color: '#000000',
-		top: 20,
+		top: 5,
 		left: 60
 	});
 	var whoImage = Ti.UI.createImageView({
@@ -74,7 +72,7 @@ var WhoMetMeView = function() {
 };
 
 var FriMetWhomView = function() {
-	var view = Ti.UI.createView();
+	var view = Ti.UI.createViewRow();
 	var friImage = Ti.UI.createImageView({
 		image: '/ttyl/ggf.JPG',
 		width: 32,
@@ -83,23 +81,23 @@ var FriMetWhomView = function() {
 	var friLabel = Ti.UI.createLabel({
 		text: 'Mr.Plub Wittawin',
 		font: {
-			fontSize:30,
+			fontSize:15,
 			fontFamily:'Helvetica Neue',
 			fontWeight:900
 		},
 		color: '#32cd32',
-		top: 20,
+		top: 5,
 		left: 100
 	});
 	var metLabel = Ti.UI.createLabel({
 		text: 'met',
 		font: {
-			fontSize:30,
+			fontSize:15,
 			fontFamily:'Helvetica Neue',
 			fontWeight:500
 		},
 		color: '#000000',
-		top: 20,
+		top: 5,
 		left: 60
 	});
 	var whomImage = Ti.UI.createImageView({
@@ -115,7 +113,7 @@ var FriMetWhomView = function() {
 	return view;
 };
 var WhoMetFriView = function() {
-	var view = Ti.UI.createView();
+	var view = Ti.UI.createViewRow();
 	var friImage = Ti.UI.createImageView({
 		image: '/ttyl/ggf.JPG',
 		width: 32,
@@ -124,23 +122,23 @@ var WhoMetFriView = function() {
 	var friLabel = Ti.UI.createLabel({
 		text: 'Mr.Plub Wittawin',
 		font: {
-			fontSize:30,
+			fontSize:15,
 			fontFamily:'Helvetica Neue',
 			fontWeight:900
 		},
 		color: '#32cd32',
-		top: 20,
+		top: 5,
 		left: 100
 	});
 	var metLabel = Ti.UI.createLabel({
 		text: 'met',
 		font: {
-			fontSize:30,
+			fontSize:15,
 			fontFamily:'Helvetica Neue',
 			fontWeight:500
 		},
 		color: '#000000',
-		top: 20,
+		top: 5,
 		left: 60
 	});
 	var whomImage = Ti.UI.createImageView({
@@ -157,7 +155,7 @@ var WhoMetFriView = function() {
 };
 
 var NoneView = function(){
-	var view = Ti.UI.createView();
+	var view = Ti.UI.createViewRow();
 	var noneLabel = Ti.UI.createLabel({
 		text:"none",
 	});

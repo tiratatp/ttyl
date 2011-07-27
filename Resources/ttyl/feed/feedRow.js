@@ -9,10 +9,7 @@ var FeedRow = function(data) {
 		width:null
 	};
 
-	var viewRow = Ti.UI.createTableViewRow({
-		height: options.height
-	});
-	var view = null;
+	var viewRow = null;
 
 	switch(data.viewType) {
 		case _cons.I_MET_WHOM:
@@ -31,10 +28,9 @@ var FeedRow = function(data) {
 		default:
 
 	}
-	viewRow.add(view);
 
 	viewRow.addEventListener('click', function(e) {
-		var feedDetail = new feedDetail(data.id)
+		var feedDetail = new FeedDetail(data.id)
 		tabGroup.activeTab.open(feedDetail.getWin());
 	});
 	this.addEventListener = function(e, fn) {
@@ -44,7 +40,7 @@ var FeedRow = function(data) {
 		viewRow.height = a;
 		view.height = a;
 	};
-	this.getViewRow = function() {
+	this.getRow = function() {
 		return viewRow;
 	};
 }
