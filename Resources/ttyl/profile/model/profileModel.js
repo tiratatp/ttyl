@@ -12,6 +12,26 @@ var ProfileModel = function()
 		return info;
 	}
 	
+	this.getContacts = function()
+	{
+		var info = [];
+		var id = 1;
+		_db.getProfileByDisplayName("plub101", function(data){
+			//alert(data);
+			contacts = data.rows[0].value.contacts;
+			alert(contacts+"x");
+			
+			for(var i=0; i<contacts.length; i++)
+			{
+				//alert(contacts[i].field_value1);
+				raw_item = contacts[i];
+				var item = {id:id, infotype:raw_item.field_type, value:raw_item.field_value1, visibility:'friends', offer:false};
+				id++;
+				info.push(item);
+			}
+		});
+	}
+	
 	this.getDataById = function(id)
 	{
 		for(var i=0; i<info.length; i++)
