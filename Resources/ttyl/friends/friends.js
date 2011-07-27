@@ -1,8 +1,4 @@
-Titanium.UI.setBackgroundColor('#FFF');
-
-var _friends = {};
-
-(function() {
+var _friends = new (function() {
 
 	// private variable	
 	var bgColor = "#FFF";
@@ -19,7 +15,7 @@ var _friends = {};
 	var rows = [];
 
 	// public variable
-	_friends.tab = tab;
+	this.tab = tab;
 
 	var test_data = [{
 		image:'ggf.JPG',
