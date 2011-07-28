@@ -1,10 +1,6 @@
-Titanium.UI.setBackgroundColor('#FFF');
+var _friends = new (function() {
 
-var _friends = {};
-
-(function() {
-
-	// private variable	
+	// private variable
 	var bgColor = "#FFF";
 	var win = Ti.UI.createWindow({
 		title: "Friends",
@@ -19,46 +15,67 @@ var _friends = {};
 	var rows = [];
 
 	// public variable
-	_friends.tab = tab;
-
-	var test_data = [{
-		image:'ggf.JPG',
-		name:"Zynes"
-	},{
-		image:'ggf.JPG',
-		name:"Zynes"
-	},];
+	this.tab = tab;
 
 	function onRowClick(event) {
 		var win = Ti.UI.createWindow({
 			title: "Friend Info",
 		});
 		var text = Titanium.UI.createLabel({
-			text:this.datum.name,			
+			text:this.datum.display_name,
 		});
 		win.add(text);
 		Ti.UI.currentTab.open(win);
 	}
 
 	function renderRow(data) {
+		if(data.rows.length<1) {
+			//
+			return;
+		}
+		data = data.rows;
 		for (var i = 0; i < data.length; i++) {
-			var datum = data[i];
+			var datum = data[i].doc;
 			var row = Ti.UI.createTableViewRow({
-				height:50,
+				height:100,
 				datum:datum,
 				backgroundColor:bgColor,
 			});
 			var rowView = Ti.UI.createView({
 				height:"100%",
-				top:0
+				top:0,
+				left:0
 			});
-			var leftImage = Ti.UI.createImageView({
-				image:datum.image,
-				width: 50,
-				left:"5%"
-			});
+			if(!datum.picture) {
+				for(var j=0;j<datum.contacts.length;j++) {
+					Ti.API.info(' _friends -> renderRow: field_type: '+ datum.contacts[i].field_type);
+					switch(datum.contacts[i].field_type) {
+						case "email":
+							datum.picture = "http://www.gravatar.com/avatar/"+Titanium.Utils.md5HexDigest(datum.contacts[i].field_value1.toLowerCase())+"?d=identicon";
+							break;
+						case "twitter":
+							datum.picture = "http://api.twitter.com/1/users/profile_image?screen_name="+datum.contacts[i].field_value1+"&size=normal";
+							break;
+						case "facebook":
+							datum.picture = "https://graph.facebook.com/"+datum.contacts[i].field_value1+"/picture?type=square";
+							break;
+					}
+					if(datum.picture) {
+						break;
+					}
+				}
+			}
+			if(datum.picture) {
+				Ti.API.info(' _friends -> renderRow: picture: '+ datum.picture);
+				var leftImage = Ti.UI.createImageView({
+					image:datum.picture,
+					width: 50,
+					left:"5%"
+				});
+				rowView.add(leftImage);
+			}
 			var title = Ti.UI.createLabel({
-				text:datum.name,
+				text:datum.display_name,
 				font: {
 					fontSize:16,
 					fontWeight:'bold'
@@ -66,11 +83,10 @@ var _friends = {};
 				width:'auto',
 				textAlign:'left',
 				top:13,
-				left:60,
+				left:70,
 				height:24
 			});
 
-			rowView.add(leftImage);
 			rowView.add(title);
 			row.add(rowView);
 			row.hasDetail=true;
@@ -81,8 +97,11 @@ var _friends = {};
 		table.setData(rows);
 	}
 
-	renderRow(test_data);
-
+	_db.addEventListener("login", function() {
+		_db.getFriends(_db.person_id, function(data) {
+			renderRow(data);
+		});
+	})
 	// add ui components
 	win.add(table);
 })();

@@ -19,12 +19,6 @@ login.tab = Titanium.UI.createTab({
 Titanium.Facebook.appid = '214932645217412';
 Titanium.Facebook.permissions = ['publish_stream'];
 
-Titanium.Facebook.addEventListener('login', function(e) {
-    if (e.success) {
-        alert('Logged in');
-    }
-});
-
 login.setOnLoggedInCallback = function(fn) {
 	Titanium.Facebook.addEventListener('login', fn);	
 };

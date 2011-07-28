@@ -75,6 +75,7 @@ var _db = new (function() {
 			//args:arg,
 		}, callback);
 	};
+<<<<<<< HEAD
 	_db.getProfileByPersonId = function(callback) {
 		
 		//prepare for argument ?key=name@example.com
@@ -89,6 +90,8 @@ var _db = new (function() {
 		}, callback);
 	};
 
+=======
+>>>>>>> d80ac600dcac961881404ca28feba81043f07311
 	/*
 	var uuids=[];
 	connect({

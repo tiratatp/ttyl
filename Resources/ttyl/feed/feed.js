@@ -1,6 +1,8 @@
 /**
  * @author Flash
  */
+Ti.include('/ttyl/feed/model/feedModel.js');
+Ti.include('/ttyl/feed/feedRow.js');
 Titanium.UI.setBackgroundColor('#FFF');
 
 
@@ -16,6 +18,7 @@ var feed = {
 	customData: [],
 	
 	// config
+	tab_icon:'KS_nav_views.png',
 	rowHeight: 50,
 	rowHeight2: 100,
 	bgColor: "#FFF",
@@ -25,14 +28,7 @@ var feed = {
 	init: function(){
 		var f = this;
 		//init data
-		f.customData = [
-			{leftImage:'ggf.JPG', title:"You have met Mr.P!" },
-			{leftImage:'ggf.JPG', title:"You have met Mr.P!" },
-			{leftImage:'ggf.JPG', title:"You have met Mr.P!" },
-			{leftImage:'ggf.JPG', title:"You have met Mr.P!" },
-			{leftImage:'ggf.JPG', title:"You have met Mr.P!" },
-			{leftImage:'ggf.JPG', title:"You have met Mr.P!" }
-		];
+		f.customData = new FeedModel();
 		//init view
 		f.win = Ti.UI.createWindow({
 			title: "Stream",
@@ -41,11 +37,12 @@ var feed = {
 		f.tab = Ti.UI.createTab({
 			window: f.win,
 			title: "Feed",
-			icon: 'KS_nav_views.png'
+			icon: f.tab_icon
 		});
 		f.table = Ti.UI.createTableView({top:'10%'});
 		f.renderRow();
 		
+		//temp button
 		var addButton = Titanium.UI.createButton({
 			borderColor:'#000',
 			borderWidth:'1.0',
@@ -58,7 +55,6 @@ var feed = {
 			textAlign:'center',
 			backgroundColor:'#fff',
 			top:0,
-			left:'5%',
 			height:'10%',
 			width:'100%',
 		});
@@ -71,67 +67,13 @@ var feed = {
 	//row process
 	renderRow: function(){
 		var f = this;
+		
 		//temp render data
-		for (var i = f.customData.length - 1; i >= 0; i--) {
-			var row = Ti.UI.createTableViewRow({height:f.rowHeight,backgroundColor:f.bgColor});
-			var rowView = Ti.UI.createView({
-				height:"100%",
-				top:0
-			});
-			
-			var leftImage = Ti.UI.createImageView({
-				image:f.customData[i].leftImage,
-				width: 50,
-				left:"5%"
-			});
-			var title = Ti.UI.createLabel({
-				text:f.customData[i].title,
-				font:{fontSize:16,fontWeight:'bold'},
-				width:'auto',
-				textAlign:'left',
-				top:13,
-				left:"20%",
-				height:24
-			});
-			
-			rowView.add(leftImage);
-			rowView.add(title);
-			row.add(rowView);
-			row.hasDetail=true;
-			f.data.push(row)
+		var data = f.customData.getData();
+		for (var i = data.length - 1; i >= 0; i--) {
+			var feedRow = new FeedRow(data[i]);
+			f.data.push(feedRow.getRow());
 		}
-		//bind event
-		f.table.addEventListener('click',function(e){
-			if(e.index>=0 && f.activeRow != e.row){
-				Ti.API.info("index of row : " + e.index);
-				if(f.activeRow != null){
-					f.activeRow.height=f.rowHeight;
-					f.activeRow.children[0].height=f.rowHeight;
-					f.activeRow.remove(f.activeRow.children[1]);
-					f.activeRow.backgroundColor = f.bgColor;
-				}
-				f.activeRow = e.row;
-				
-				var rowButtonView = Ti.UI.createView({
-					bottom: 0
-				});
-				var button1 = Ti.UI.createButton({
-					title: "View Offer",
-					right: 5,
-					bottom: 0
-				});
-				
-				button1.addEventListener('click',function(e){
-					alert('this is offer!');
-				});
-				
-				rowButtonView.add(button1);
-				f.activeRow.height = f.rowHeight2;
-				f.activeRow.backgroundColor = f.bgColor2;
-				f.activeRow.children[0].height = f.rowHeight2;
-				f.activeRow.add(rowButtonView);
-			}
-		});
 		
 		f.table.setData(f.data);
 	},
