@@ -68,6 +68,19 @@ var _db = {};
 			//args:arg,
 		}, callback);
 	};
+	_db.getProfileByPersonId = function(callback) {
+		
+		//prepare for argument ?key=name@example.com
+		//var arg = [{key:"key", value:displayName}];
+		
+		//connect https://ttyl.iriscouch.com/ttyl/_design/person/_view/by_display_name?key="name@example.com"
+		connect({
+			url:"https://ttyl.iriscouch.com/ttyl/_design/person/_view/by_person_id?key=" + '"' + _db.person_id + '"'
+			//object:"person",
+			//view:"by_display_name",
+			//args:arg,
+		}, callback);
+	};
 
 	/*
 	var uuids=[];

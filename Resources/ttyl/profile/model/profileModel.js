@@ -5,6 +5,7 @@ var ProfileModel = function()
 		{id:'2', infotype:'facebook', value:'wittawin', visibility:'followers', offer:true},
 		{id:'3', infotype:'twitter', value:'plub', visibility:'followers', offer:true},
 		{id:'4', infotype:'foursquare', value:'plub101', visibility:'friends', offer:false}
+
 	];
 	
 	this.getData = function()
