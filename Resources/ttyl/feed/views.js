@@ -2,7 +2,7 @@
  * @author Flash
  */
 var IMetWhomView = function() {
-	var view = Ti.UI.createViewRow();
+	var view = Ti.UI.createTableViewRow();
 	var youLabel = Ti.UI.createLabel({
 		text: 'You',
 		font: {
@@ -37,7 +37,7 @@ var IMetWhomView = function() {
 };
 
 var WhoMetMeView = function() {
-	var view = Ti.UI.createViewRow();
+	var view = Ti.UI.createTableViewRow();
 	var youLabel = Ti.UI.createLabel({
 		text: 'YOU',
 		font: {
@@ -72,7 +72,7 @@ var WhoMetMeView = function() {
 };
 
 var FriMetWhomView = function() {
-	var view = Ti.UI.createViewRow();
+	var view = Ti.UI.createTableViewRow();
 	var friImage = Ti.UI.createImageView({
 		image: '/ttyl/ggf.JPG',
 		width: 32,
@@ -113,7 +113,7 @@ var FriMetWhomView = function() {
 	return view;
 };
 var WhoMetFriView = function() {
-	var view = Ti.UI.createViewRow();
+	var view = Ti.UI.createTableViewRow();
 	var friImage = Ti.UI.createImageView({
 		image: '/ttyl/ggf.JPG',
 		width: 32,
@@ -155,7 +155,7 @@ var WhoMetFriView = function() {
 };
 
 var NoneView = function(){
-	var view = Ti.UI.createViewRow();
+	var view = Ti.UI.createTableViewRow();
 	var noneLabel = Ti.UI.createLabel({
 		text:"none",
 	});
