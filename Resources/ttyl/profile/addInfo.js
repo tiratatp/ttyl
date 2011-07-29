@@ -62,34 +62,11 @@ var AddInfoWindow = function(title) {
 
 		row.addEventListener('click', function(e) {
 			//Titanium.API.info('event fire : ' + e.type + ' value  '+textfield.value);
-			_db.getProfileByPersonId( function(data) {
-				if(data&&data.rows) {
-					Titanium.API.info("data --------------> "+data);
-					var contactlist = typeof(data.rows[0].value.contacts)!= undefined || typeof(data.rows[0].value.contacts)!= null ?data.rows[0].value.contacts:[];
-					contactlist.push({
-						"field_value1": textfield.value,
-						"field_type": title.toLowerCase()
-					});
-					   var dateT = new Date();
-			        dateTime = dateT.getYear()
-			        + '/' + (dateT.getMonth()+1)
-			        + '/' + (dateT.getDate())
-			        + ' ' + (dateT.getHours())
-			        + ':' + (dateT.getMinutes())
-			        + ':' + (dateT.getSeconds());       
-					var insertData = {
-						"_id": data.rows[0].value._id ,
-						"_rev":data.rows[0].value._rev ,
-						"display_name":  data.rows[0].value.display_name,
-						"type": "person",
-						"contacts":contactlist,
-						"created_datetime":dateTime
-					};
-					_db.create(insertData,function(result){
-						Titanium.API.info(" do method .........................");
-					});
-				}
-			});
+		_db.deleteContacts(title.toLowerCase(),"yong2@facebook",function(result){
+			Ti.API.info("success");
+		});
+					
+
 			win.close();
 		});
 		row.add(label);

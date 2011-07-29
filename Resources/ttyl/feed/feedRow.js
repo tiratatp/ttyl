@@ -9,7 +9,7 @@ var FeedRow = function(data) {
 		width:null
 	};
 
-	var viewRow = null;
+	var viewRow = Titanium.UI.createTableViewRow();
 
 	switch(data.viewType) {
 		case _cons.I_MET_WHOM:
