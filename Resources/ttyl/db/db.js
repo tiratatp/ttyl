@@ -3,10 +3,22 @@
  */
 
 var _db = new (function() {
-	//var base_url = "https://nuttyknot:tiratat@ttyl.iriscouch.com/ttyl/",
-	var base_url = "https://ttyl.iriscouch.com/ttyl/",
-	xhr = Titanium.Network.createHTTPClient();
-
+	var base_url = "https://nuttyknot:tiratat@ttyl.iriscouch.com/ttyl/",
+	//var base_url = "https://ttyl.iriscouch.com/ttyl/",
+	xhr = Titanium.Network.createHTTPClient(),
+	sqllite;
+	
+	function initLocalDB() {
+		if(!sqllite) {
+			sqllite = Titanium.Database.open('ttyl.local');
+		}		
+		with(sqllite) {
+			execute('CREATE TABLE IF NOT EXISTS "persons" ("person_id" VARCHAR PRIMARY KEY NOT NULL, "display_name" VARCHAR NOT NULL, "revision" VARCHAR NOT NULL )');					
+			execute('CREATE TABLE IF NOT EXISTS "cache" ("request_url" VARCHAR PRIMARY KEY NOT NULL, "response" TEXT NOT NULL, "ETag" VARCHAR NOT NULL )');
+		}	
+	}
+	initLocalDB();
+	
 	this.person_id = undefined;
 	var that = this;
 	var callback = [];
@@ -19,6 +31,8 @@ var _db = new (function() {
 		 * options[method]
 		 * options[data]
 		 * */
+		
+		// building url
 		var url=options['url'] || base_url,
 		method = options['method'] || "GET",
 		data = ('data' in options?JSON.stringify(options['data']):null);
@@ -41,27 +55,64 @@ var _db = new (function() {
 
 			}
 		}
-		Titanium.API.info('XHR open: ' + url);
-		xhr.open(method, url);
-		//authstr = 'Basic ' +Titanium.Utils.base64encode(username+':'+password);
-		authstr = 'Basic ' +Titanium.Utils.base64encode('nuttyknot:tiratat');
-		xhr.setRequestHeader('Authorization', authstr);
-
-		xhr.onload = function() {
-			Titanium.API.info('Text: ' + this.responseText);
-			var jsonObject = JSON.parse(this.responseText);
-			if(callback) {
-				callback(jsonObject);
+		Titanium.API.info(' _db.connect -> XHR open: ' + url);
+		
+		var authstr = 'Basic ' +Titanium.Utils.base64encode('nuttyknot:tiratat');		
+		
+		function real_connect() {
+			xhr.onload = function() {
+				var ETag = this.getResponseHeader('ETag');
+				Ti.API.info(" _db.connect -> Got response from REAL request New ETag: "+ETag);
+				var newResponseText = this.responseText?this.responseText.replace(/\n/g,""):"{}";
+				Titanium.API.info(' _db.connect -> Response: ' + newResponseText);
+				var jsonObject = JSON.parse(newResponseText);
+				sqllite.execute("INSERT OR REPLACE INTO cache (request_url, response, ETag) VALUES (?,?,?)",this.location,newResponseText,ETag);
+				if(callback) {
+					callback(jsonObject);
+				}
+			};
+			xhr.onerror = function() {
+				Titanium.API.info(' _db.connect -> Error: ' + this.responseText);
+			};
+			xhr.open(method, url);		
+			xhr.setRequestHeader('Authorization', authstr);		
+			Titanium.API.info(' _db.connect -> XHR send data: ' + data);
+			if(data) {
+				xhr.setRequestHeader('Content-Type', 'application/json');
 			}
-		};
-		xhr.onerror = function() {
-			Titanium.API.info('Error: ' + this.responseText);
-		};
-		Titanium.API.info('XHR send data: ' + data);
-		if(data) {
-			xhr.setRequestHeader('Content-Type', 'application/json');
+			xhr.send(data);	
 		}
-		xhr.send(data);
+		
+		if(method == "GET") {
+			// fire HEAD request
+			Ti.API.info(" _db.connect -> Perform HEAD request");
+			xhr.onload = function() {				
+				var ETag = this.getResponseHeader('ETag');
+				Ti.API.info(" _db.connect -> Got response from HEAD request ETag: "+ETag);
+				var rows = sqllite.execute('SELECT response FROM cache WHERE request_url = ? AND ETag = ?',this.location,ETag);
+				var response;  
+				if (rows.isValidRow()) {   
+				    response = rows.fieldByName('response')
+				}
+				rows.close();
+				
+				if(response) {
+					Ti.API.info(" _db.connect -> Cache HIT! ("+this.location+")");
+					var jsonObject = JSON.parse(response);
+					if(callback) {
+						callback(jsonObject);
+					}
+				} else {
+					Ti.API.info(" _db.connect -> Cache MISSED! ("+this.location+")");
+					real_connect();
+				}
+			};		 
+			xhr.open('HEAD', url);
+			xhr.setRequestHeader('Authorization', authstr);
+			xhr.send();
+		} else {
+			real_connect();
+		}
 	}
 
 	this.getProfileByDisplayName = function(displayName, callback) {
@@ -284,11 +335,26 @@ var _db = new (function() {
 		});
 	};
 	this.onLoggedIn = function(e, callback) {
+		function privateCallback() {
+			Ti.App.Properties.setString("logged_in_person",that.person_id)
+			Titanium.API.info(' _db.onLoggedIn-> logged-in person_id : ' + that.person_id);
+			if(callback) {
+				callback()
+			};
+			onEvent("login");
+		}
 		Titanium.API.info(' _db.onLoggedIn: ' + e.success + ' '+ e.uid);
 		if(!e.uid) {
 			return false;
 		}
 		var uid = e.uid;
+		
+		var logged_in_person = Ti.App.Properties.getString("logged_in_person","");
+		if(logged_in_person) {
+			that.person_id = logged_in_person;
+			Titanium.API.info(' _db.onLoggedIn-> fetch person_id from app property : ' + that.person_id);			
+	    	privateCallback();
+		}	    		
 
 		connect({
 			object:"_design/person",
@@ -301,9 +367,7 @@ var _db = new (function() {
 			Titanium.API.info(' _db.onLoggedIn-> cb : ' + JSON.stringify(data));
 			if(data.rows.length!=0) {
 				that.person_id = data.rows[0].id;
-				Titanium.API.info(' _db.onLoggedIn-> logged-in person_id : ' + this.person_id);
-				callback();
-				onEvent("login");
+				privateCallback();
 			} else {
 				var timestamp = new Date().getTime();
 				_db.create({
@@ -318,9 +382,7 @@ var _db = new (function() {
 				}, function(data) {
 					Titanium.API.info(' _db.onLoggedIn-> cb : ' + JSON.stringify(data));
 					that.person_id = data.id;
-					Titanium.API.info(' _db.onLoggedIn-> logged-in person_id : ' + this.person_id);
-					callback();
-					onEvent("login");
+					privateCallback();
 				});
 			}
 		});
@@ -337,7 +399,7 @@ var _db = new (function() {
 				key:"include_docs",
 				value:true
 			}]
-		}, function(data) {
+		}, function(data) {			
 			if(callback) {
 				callback(data);
 			}
