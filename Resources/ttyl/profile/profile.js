@@ -21,75 +21,23 @@ var Profile = function()
 	var TheTable = Titanium.UI.createTableView({});
 	
 	
-	var profileModel = new ProfileModel();
+	var profileModel = new ProfileModel('12345');
 	var CustomData = profileModel.getData();
 	
-	var infoSection = createInfoSection();
+	var infoSection = profileModel.getContactInTableViewSection();
+	infoSection.addEventListener('click', function(e)
+	{
+		var id = e.row.id;
+		var profileDetail = new ProfileDetail(id);
+		tabGroup.activeTab.open(profileDetail.win);
+	});
+	
 	var addSection = createAddSection();
 	var profileSection = createProfileSection();
 	
 	TheTable.setData([profileSection, infoSection, addSection]);
 
 	this.win.add(TheTable);
-	
-	function createInfoSection()
-	{
-		var section = Titanium.UI.createTableViewSection({
-		});
-		
-		for (var i = 0; i <= CustomData.length - 1; i++){
-	
-			var row = Titanium.UI.createTableViewRow();
-			
-			row.id = CustomData[i].id;
-		
-			var icon =  Titanium.UI.createImageView({
-				image:getInfoIcon(CustomData[i].infotype),
-				width:32,
-				height:32,
-				left:4,
-				top:9
-			});
-			
-			var value = Titanium.UI.createLabel({
-				text:CustomData[i].value,
-				font:{fontSize:16,fontWeight:'bold'},
-				width:'auto',
-				textAlign:'left',
-				top:13,
-				left:40,
-				height:24
-			});
-			
-			var visibility =  Titanium.UI.createLabel({
-				text:CustomData[i].visibility,
-				font:{fontSize:12},
-				width:'auto',
-				textAlign:'left',
-				top:13,
-				right:30,
-				height:24
-			});
-			
-			row.add(icon);
-			row.add(value);
-			row.add(visibility);
-		
-			row.hasChild=true;
-			row.className = 'profile_row';
-			
-			section.add(row);
-		}
-		
-		section.addEventListener('click', function(e)
-		{
-			var id = e.row.id;
-			var profileDetail = new ProfileDetail(id);
-			tabGroup.activeTab.open(profileDetail.win);
-		});
-		
-		return section;
-	}
 	
 	function createAddSection()
 	{
@@ -142,11 +90,5 @@ var Profile = function()
 		//section.add(value);		
 		
 		return section;
-	}
-	
-	function getInfoIcon(infoType)
-	{
-		var icon = "/images/icons/" + infoType + ".png";
-		return icon;
 	}
 }
