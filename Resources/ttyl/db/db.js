@@ -33,6 +33,8 @@ var _db = new (function() {
 				Ti.API.info('Typeof Arg: key->'+typeof(arg['key']) +' Typeof value->'+typeof(arg['value']));
 				if(typeof(arg['value']) == "string") {
 					url+=(Titanium.Network.encodeURIComponent(arg['key'])+"=\""+Titanium.Network.encodeURIComponent(arg['value'])+"\"&");
+				} else if(typeof(arg['value'] == "object")) {
+					url+=(Titanium.Network.encodeURIComponent(arg['key'])+"="+JSON.stringify(arg['value'])+"&");
 				} else {
 					url+=(Titanium.Network.encodeURIComponent(arg['key'])+"="+Titanium.Network.encodeURIComponent(arg['value'])+"&");
 				}
@@ -344,7 +346,19 @@ var _db = new (function() {
 	
 	/* Meet */
 	// 2 types
-	this.getMeetList = function(person_id, callback){
-		
-	}
+	this.getMeetList = function(person_id){
+		Titanium.API.info('_db.getMeetList -> person_id : ' + person_id);
+		connect({
+			object:"_design/meet",
+			view:"by_person_id",
+			args:[
+				{key:"startkey", value:[person_id,{}]},
+				{key:"endkey", value:[person_id]},
+				{key:"descending", value:true},
+				{key:"inclusive_end", value:false}
+			]
+		},function(data){
+			Titanium.API.info('_db.getMeetList -> data(response) : ' + data);
+		});
+	};
 })();
