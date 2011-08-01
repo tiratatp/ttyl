@@ -1,5 +1,5 @@
 Ti.include('/ttyl/utils/constants.js');
-Ti.include('/ttyl/utils/json2.js');
+//Ti.include('/ttyl/utils/json2.js');
 //Ti.include('/ttyl/utils/jquery-1.6.2.min.js')
 Ti.include('/ttyl/utils/sha1.js');
 Ti.include('/ttyl/utils/utils.js');
