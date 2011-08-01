@@ -13,20 +13,20 @@ var FeedRow = function(data) {
 
 	switch(data.viewType) {
 		case _cons.I_MET_WHOM:
-			view = IMetWhomView();
+			viewRow = IMetWhomView();
 			break;
 		case _cons.WHO_MET_ME:
-			view = WhoMetMeView();
+			viewRow = WhoMetMeView();
 			break;
 		case _cons.FRI_MET_WHOM:
-			view = FriMetWhomView();
+			viewRow = FriMetWhomView();
 			break;
 		case _cons.WHO_MET_FRI:
-			view = WhoMetFriView();
+			viewRow = WhoMetFriView();
 			break;
 		case _cons.NONE:
 		default:
-
+			viewRow = NoneView();
 	}
 
 	viewRow.addEventListener('click', function(e) {
