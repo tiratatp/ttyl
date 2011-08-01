@@ -75,10 +75,10 @@ var _db = new (function() {
 			//args:arg,
 		}, callback);
 	};
-	this.getProfileByPersonId = function(callback) {
-		if(that.person_id){
+	this.getProfileByPersonId = function(id,callback) {
+		if(id){
 		connect({
-			url:"https://ttyl.iriscouch.com/ttyl/_design/person/_view/by_person_id?key=" + '"' + that.person_id + '"'
+			url:"https://ttyl.iriscouch.com/ttyl/_design/person/_view/by_person_id?key=" + '"' + id + '"'
 			//object:"person",
 			//view:"by_display_name",
 			//args:arg,
@@ -87,9 +87,9 @@ var _db = new (function() {
 			callback("not found person id");
 		}
 	};
-	this.addContacts = function(type,value,visibility,offer,callback) {
-		if(callback){
-			 _db.getProfileByPersonId( function(data) {
+	this.addContacts = function(id,type,value,visibility,offer,callback) {
+		if(id){
+			 _db.getProfileByPersonId(id, function(data) {
 				if(data&&data.rows) {
 					Titanium.API.info("data --------------> "+data);
 					var contactlist = typeof(data.rows[0].value.contacts)!= undefined || typeof(data.rows[0].value.contacts)!= null ?data.rows[0].value.contacts:[];
@@ -125,9 +125,9 @@ var _db = new (function() {
 		}
 		
 	};
-	this.updateContacts = function(type,oldvalue,newvalue,visibility,offer,callback) {
-		if(callback){
-			 _db.getProfileByPersonId( function(data) {
+	this.updateContacts = function(id,type,oldvalue,newvalue,visibility,offer,callback) {
+		if(id){
+			 _db.getProfileByPersonId(id,function(data) {
 				if(data&&data.rows) {
 					Titanium.API.info("data --------------> "+data);
 					var contactlist = typeof(data.rows[0].value.contacts)!= undefined || typeof(data.rows[0].value.contacts)!= null ?data.rows[0].value.contacts:[];
@@ -180,9 +180,9 @@ var _db = new (function() {
 		}
 		
 	};
-	this.deleteContacts = function(type,value,callback) {
-		if(callback){
-			 _db.getProfileByPersonId( function(data) {
+	this.deleteContacts = function(id,type,value,callback) {
+		if(id){
+			 _db.getProfileByPersonId(id,function(data) {
 				if(data&&data.rows) {
 					Titanium.API.info("data --------------> "+data);
 					var contactlist = typeof(data.rows[0].value.contacts)!= undefined || typeof(data.rows[0].value.contacts)!= null ?data.rows[0].value.contacts:[];
