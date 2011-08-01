@@ -341,4 +341,10 @@ var _db = new (function() {
 			}
 		});
 	}
+	
+	/* Meet */
+	// 2 types
+	this.getMeetList = function(person_id, callback){
+		
+	}
 })();
