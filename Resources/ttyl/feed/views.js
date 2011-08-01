@@ -25,7 +25,7 @@ var IMetWhomView = function() {
 		left: 60
 	});
 	var whomImage = Ti.UI.createImageView({
-		image: '/ttyl/ggf.JPG',
+		image: '/ggf.JPG',
 		width: 32,
 		left: 100
 	});
@@ -60,7 +60,7 @@ var WhoMetMeView = function() {
 		left: 60
 	});
 	var whoImage = Ti.UI.createImageView({
-		image: '/ttyl/ggf.JPG',
+		image: '/ggf.JPG',
 		width: 32,
 		left: 20
 	});
@@ -74,7 +74,7 @@ var WhoMetMeView = function() {
 var FriMetWhomView = function() {
 	var view = Ti.UI.createTableViewRow();
 	var friImage = Ti.UI.createImageView({
-		image: '/ttyl/ggf.JPG',
+		image: '/ggf.JPG',
 		width: 32,
 		left: 20
 	});
@@ -101,7 +101,7 @@ var FriMetWhomView = function() {
 		left: 60
 	});
 	var whomImage = Ti.UI.createImageView({
-		image: '/ttyl/ggf.JPG',
+		image: '/ggf.JPG',
 		width: 32,
 		left: 20
 	});
@@ -115,7 +115,7 @@ var FriMetWhomView = function() {
 var WhoMetFriView = function() {
 	var view = Ti.UI.createTableViewRow();
 	var friImage = Ti.UI.createImageView({
-		image: '/ttyl/ggf.JPG',
+		image: '/ggf.JPG',
 		width: 32,
 		left: 20
 	});
@@ -142,7 +142,7 @@ var WhoMetFriView = function() {
 		left: 60
 	});
 	var whomImage = Ti.UI.createImageView({
-		image: '/ttyl/ggf.JPG',
+		image: '/ggf.JPG',
 		width: 32,
 		left: 20
 	});
