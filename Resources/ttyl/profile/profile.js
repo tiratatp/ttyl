@@ -6,6 +6,7 @@ Ti.include('/ttyl/profile/model/profileModel.js');
 
 var Profile = function()
 {	
+	var that = this;
 	this.win = Titanium.UI.createWindow({
 		title:'Profile',
 		backgroundColor:'#fff'
@@ -18,27 +19,33 @@ var Profile = function()
 	});
 	
 	
-	var TheTable = Titanium.UI.createTableView({});
+	var TheTable = Titanium.UI.createTableView();
 	
 	
-	var profileModel = new ProfileModel('12345');
-	var CustomData = profileModel.getData();
+    _db.addEventListener("login", function() {
+		
+			var profileModel = new ProfileModel(_db.person_id);
+			// var CustomData = profileModel.getData();
+			profileModel.initContacts();
+					
+			var infoSection = profileModel.getContactInTableViewSection();
+			infoSection.addEventListener('click', function(e)
+			{
+				var id = e.row.id;
+				var profileDetail = new ProfileDetail(id);
+				tabGroup.activeTab.open(profileDetail.win);
+			});
+			
+			var addSection = createAddSection();
+			var profileSection = createProfileSection();
+			
+			TheTable.setData([profileSection, infoSection, addSection]);
+			
+			that.win.add(TheTable);
 	
-	var infoSection = profileModel.getContactInTableViewSection();
-	infoSection.addEventListener('click', function(e)
-	{
-		var id = e.row.id;
-		var profileDetail = new ProfileDetail(id);
-		tabGroup.activeTab.open(profileDetail.win);
 	});
 	
-	var addSection = createAddSection();
-	var profileSection = createProfileSection();
-	
-	TheTable.setData([profileSection, infoSection, addSection]);
 
-	this.win.add(TheTable);
-	
 	function createAddSection()
 	{
 		var section = Titanium.UI.createTableViewSection();

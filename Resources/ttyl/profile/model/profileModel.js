@@ -1,35 +1,41 @@
 var ProfileModel = function(id)
 {
-	var user_id = id;
-	var info = [
-		{id:'1', infotype:'email', value:'plub101@gmail.com', visibility:'friends', offer:false},
-		{id:'2', infotype:'facebook', value:'wittawin', visibility:'followers', offer:true},
-		{id:'3', infotype:'twitter', value:'plub', visibility:'followers', offer:true},
-		{id:'4', infotype:'foursquare', value:'plub101', visibility:'friends', offer:false}
-
-	];
-	
+	var	usr_id  = id;
+	var info = [];
+	// {id:'1', infotype:'email', value:'plub101@gmail.com', visibility:'friends', offer:false},
+		// {id:'2', infotype:'facebook', value:'wittawin', visibility:'followers', offer:true},
+		// {id:'3', infotype:'twitter', value:'plub', visibility:'followers', offer:true},
+		// {id:'4', infotype:'foursquare', value:'plub101', visibility:'friends', offer:false}	
 	this.getData = function()
 	{
 		return info;
 	}
 	
-	this.getContacts = function()
+	this.initContacts = function()
 	{
 		var info = [];
-		var id = 1;
-		_db.getProfileByDisplayName("plub101", function(data){
+		// var id = 1;
+		Titanium.API.info("user id ------------------->"+usr_id);
+		Titanium.API.info("db id ------------------->"+_db.person_id);
+		_db.getProfileByPersonId(usr_id, function(data){
 			//alert(data);
-			contacts = data.rows[0].value.contacts;
-			alert(contacts+"x");
-			
-			for(var i=0; i<contacts.length; i++)
-			{
-				//alert(contacts[i].field_value1);
-				raw_item = contacts[i];
-				var item = {id:id, infotype:raw_item.field_type, value:raw_item.field_value1, visibility:'friends', offer:false};
-				id++;
-				info.push(item);
+			if(data&&data.rows) {
+				var contactlist = typeof(data.rows[0].value.contacts)!= undefined || typeof(data.rows[0].value.contacts)!= null ?data.rows[0].value.contacts:[];	
+				// for(var i=0; i<contacts.length; i++)
+				// {
+					// //alert(contacts[i].field_value1);
+					// raw_item = contacts[i];
+					// var item = {id:id, infotype:raw_item.field_type, value:raw_item.field_value1, visibility:'friends', offer:false};
+					// // id++;
+					// info.push(item);
+				// }
+				for(var i = 0 ; i< contactlist.length ;i++ ){
+						Titanium.API.info("contact type --------------> "+contactlist[i].field_type);
+						Titanium.API.info("contact value --------------> "+contactlist[i].field_value1);						
+						var item = {id:(i+1),infotype:contactlist[i].field_type,value:contactlist[i].field_value1,visibility:contactlist[i].visibility,offer:contactlist[i].offer};
+						info.push(item);
+				}
+			Titanium.API.info("info ------------------->"+info);	
 			}
 		});
 	}
