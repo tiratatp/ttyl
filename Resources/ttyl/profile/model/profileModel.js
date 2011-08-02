@@ -1,7 +1,8 @@
 var ProfileModel = function(id)
 {
-	var	usr_id  = id;
-	var info = [];
+	this.usr_id  = id;
+	this.info = [];
+	var that = this;
 	// {id:'1', infotype:'email', value:'plub101@gmail.com', visibility:'friends', offer:false},
 		// {id:'2', infotype:'facebook', value:'wittawin', visibility:'followers', offer:true},
 		// {id:'3', infotype:'twitter', value:'plub', visibility:'followers', offer:true},
@@ -11,33 +12,26 @@ var ProfileModel = function(id)
 		return info;
 	}
 	
-	this.initContacts = function()
+	this.initContacts = function(callback)
 	{
-		var info = [];
-		// var id = 1;
-		Titanium.API.info("user id ------------------->"+usr_id);
-		Titanium.API.info("db id ------------------->"+_db.person_id);
-		_db.getProfileByPersonId(usr_id, function(data){
-			//alert(data);
+		var info = that.info;
+		var infoSection = null;
+		Titanium.API.info("person id ------------------->"+_db.person_id);
+		_db.getProfileByPersonId(that.usr_id, function(data){
 			if(data&&data.rows) {
 				var contactlist = typeof(data.rows[0].value.contacts)!= undefined || typeof(data.rows[0].value.contacts)!= null ?data.rows[0].value.contacts:[];	
-				// for(var i=0; i<contacts.length; i++)
-				// {
-					// //alert(contacts[i].field_value1);
-					// raw_item = contacts[i];
-					// var item = {id:id, infotype:raw_item.field_type, value:raw_item.field_value1, visibility:'friends', offer:false};
-					// // id++;
-					// info.push(item);
-				// }
+
 				for(var i = 0 ; i< contactlist.length ;i++ ){
 						Titanium.API.info("contact type --------------> "+contactlist[i].field_type);
 						Titanium.API.info("contact value --------------> "+contactlist[i].field_value1);						
 						var item = {id:(i+1),infotype:contactlist[i].field_type,value:contactlist[i].field_value1,visibility:contactlist[i].visibility,offer:contactlist[i].offer};
 						info.push(item);
 				}
-			Titanium.API.info("info ------------------->"+info);	
 			}
+			infoSection =  that.getContactInTableViewSection();
+			callback(infoSection);
 		});
+		
 	}
 	
 	this.getDataById = function(id)
@@ -54,9 +48,10 @@ var ProfileModel = function(id)
 	
 	this.getContactInTableViewSection = function()
 	{
-		var section = Titanium.UI.createTableViewSection({
+			var info = that.info;
+			var section = Titanium.UI.createTableViewSection({
 		});
-		
+		Titanium.API.info("info length"+info.length);
 		for (var i = 0; i <= info.length - 1; i++){
 	
 			var row = Titanium.UI.createTableViewRow();

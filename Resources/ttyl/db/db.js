@@ -18,7 +18,10 @@ var _db = new (function() {
 		}	
 	}
 	initLocalDB();
-	
+	// (function() {
+	// sqllite.execute("delete from cache");
+	// }());
+
 	this.person_id = undefined;
 	var that = this;
 	var callback = [];
@@ -86,30 +89,34 @@ var _db = new (function() {
 		if(method == "GET") {
 			// fire HEAD request
 			Ti.API.info(" _db.connect -> Perform HEAD request");
-			xhr.onload = function() {				
-				var ETag = this.getResponseHeader('ETag');
-				Ti.API.info(" _db.connect -> Got response from HEAD request ETag: "+ETag);
-				var rows = sqllite.execute('SELECT response FROM cache WHERE request_url = ? AND ETag = ?',this.location,ETag);
-				var response;  
-				if (rows.isValidRow()) {   
-				    response = rows.fieldByName('response')
-				}
-				rows.close();
-				
-				if(response) {
-					Ti.API.info(" _db.connect -> Cache HIT! ("+this.location+")");
-					var jsonObject = JSON.parse(response);
-					if(callback) {
-						callback(jsonObject);
+			xhr.onload = function() {	
+				if(xhr.readyState > 1){			
+					var ETag = this.getResponseHeader('ETag');
+					Ti.API.info(" _db.connect -> Got response from HEAD request ETag: "+ETag);
+					var rows = sqllite.execute('SELECT response FROM cache WHERE request_url = ? AND ETag = ?',this.location,ETag);
+					var response;  
+					if (rows.isValidRow()) {   
+					    response = rows.fieldByName('response')
 					}
-				} else {
-					Ti.API.info(" _db.connect -> Cache MISSED! ("+this.location+")");
-					real_connect();
+					rows.close();
+					
+					if(response) {
+						Ti.API.info(" _db.connect -> Cache HIT! ("+this.location+")");
+						Ti.API.info("_db.response -> reponse"+response);
+						var jsonObject = JSON.parse(response);
+						if(callback) {
+							callback(jsonObject);
+						}
+					} else {
+						Ti.API.info(" _db.connect -> Cache MISSED! ("+this.location+")");
+						real_connect();
+					}
 				}
 			};		 
 			xhr.open('HEAD', url);
 			xhr.setRequestHeader('Authorization', authstr);
 			xhr.send();
+		
 		} else {
 			real_connect();
 		}
@@ -117,10 +124,6 @@ var _db = new (function() {
 
 	this.getProfileByDisplayName = function(displayName, callback) {
 
-		//prepare for argument ?key=name@example.com
-		//var arg = [{key:"key", value:displayName}];
-
-		//connect https://ttyl.iriscouch.com/ttyl/_design/person/_view/by_display_name?key="name@example.com"
 		connect({
 			url:"https://ttyl.iriscouch.com/ttyl/_design/person/_view/by_display_name?key=" + '"' + displayName + '"'
 			//object:"person",
@@ -309,6 +312,13 @@ var _db = new (function() {
 			callback[e] = [];
 		}
 		callback[e].push(fn);
+	};
+	this.removeEventListener = function(e, fn) {
+		// e == login, meet
+		if(!callback[e]) {
+			callback[e] = [];
+		}
+		callback[e].pop(fn);
 	};
 	function onEvent(e, data) {
 		Titanium.API.info(' _db.onEvent-> event : ' + e);

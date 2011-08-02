@@ -6,6 +6,7 @@ Ti.include('/ttyl/profile/model/profileModel.js');
 
 var Profile = function()
 {	
+	var success = false;
 	var that = this;
 	this.win = Titanium.UI.createWindow({
 		title:'Profile',
@@ -20,30 +21,33 @@ var Profile = function()
 	
 	
 	var TheTable = Titanium.UI.createTableView();
-	
-	
-    _db.addEventListener("login", function() {
+
+		var initCallback = function() {
 		
+		if(_db.person_id && !success){
 			var profileModel = new ProfileModel(_db.person_id);
 			// var CustomData = profileModel.getData();
-			profileModel.initContacts();
-					
-			var infoSection = profileModel.getContactInTableViewSection();
-			infoSection.addEventListener('click', function(e)
-			{
-				var id = e.row.id;
-				var profileDetail = new ProfileDetail(id);
-				tabGroup.activeTab.open(profileDetail.win);
+			 profileModel.initContacts(function(infoSection){			
+			// var infoSection = profileModel.getContactInTableViewSection();
+				infoSection.addEventListener('click', function(e)
+				{
+					var id = e.row.id;
+					var profileDetail = new ProfileDetail(id);
+					tabGroup.activeTab.open(profileDetail.win);
+				});
+				
+				var addSection = createAddSection();
+				var profileSection = createProfileSection();
+				
+				TheTable.setData([profileSection, infoSection, addSection]);
+				success = (infoSection != null);
 			});
-			
-			var addSection = createAddSection();
-			var profileSection = createProfileSection();
-			
-			TheTable.setData([profileSection, infoSection, addSection]);
-			
+		}
 			that.win.add(TheTable);
 	
-	});
+	};
+		    _db.addEventListener("login",initCallback );
+		    
 	
 
 	function createAddSection()
