@@ -18,9 +18,9 @@ var _db = new (function() {
 		}	
 	}
 	initLocalDB();
-	// (function() {
-	// sqllite.execute("delete from cache");
-	// }());
+	(function() {
+	sqllite.execute("delete from cache");
+	}());
 
 	this.person_id = undefined;
 	var that = this;
