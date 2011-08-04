@@ -88,7 +88,7 @@ var _db = new (function() {
 		try {		
 			var xhr = Titanium.Network.createHTTPClient({
 				onload: function() {
-					if(xhr.readyState == 1) {	
+					if(this.readyState == 1) {	
 						return;
 					}
 					if(method == "GET") {
