@@ -56,6 +56,8 @@ var _db = new (function() {
 				Ti.API.info('Arg: key->'+ key +' value->'+ value + " type: "+ typeOfValue);
 				if(typeOfValue == "string") {
 					url+=(Titanium.Network.encodeURIComponent(key)+"=\""+Titanium.Network.encodeURIComponent(value)+"\"&");
+				} else if(typeof(arg['value'] == "object")) {
+					url+=(Titanium.Network.encodeURIComponent(arg['key'])+"="+JSON.stringify(arg['value'])+"&");
 				} else {
 					url+=(Titanium.Network.encodeURIComponent(key)+"="+Titanium.Network.encodeURIComponent(value)+"&");
 				}
@@ -86,6 +88,9 @@ var _db = new (function() {
 		try {		
 			var xhr = Titanium.Network.createHTTPClient({
 				onload: function() {
+					if(xhr.readyState == 1) {	
+						return;
+					}
 					if(method == "GET") {
 						var ETag = this.getResponseHeader('ETag');
 						response = this.responseText?this.responseText.replace(/\n/g,""):"{}";				
@@ -137,10 +142,6 @@ var _db = new (function() {
 
 	this.getProfileByDisplayName = function(displayName, callback) {
 
-		//prepare for argument ?key=name@example.com
-		//var arg = [{key:"key", value:displayName}];
-
-		//connect https://ttyl.iriscouch.com/ttyl/_design/person/_view/by_display_name?key="name@example.com"
 		connect({
 			url:"https://ttyl.iriscouch.com/ttyl/_design/person/_view/by_display_name?key=" + '"' + displayName + '"'
 			//object:"person",
@@ -427,4 +428,22 @@ var _db = new (function() {
 			}
 		});
 	}
+	
+	/* Meet */
+	// 2 types
+	this.getMeetList = function(person_id){
+		Titanium.API.info('_db.getMeetList -> person_id : ' + person_id);
+		connect({
+			object:"_design/meet",
+			view:"by_person_id",
+			args:[
+				{key:"startkey", value:[person_id,{}]},
+				{key:"endkey", value:[person_id]},
+				{key:"descending", value:true},
+				{key:"inclusive_end", value:false}
+			]
+		},function(data){
+			Titanium.API.info('_db.getMeetList -> data(response) : ' + data);
+		});
+	};
 })();
