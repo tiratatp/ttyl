@@ -1,7 +1,8 @@
-var ProfileDetail = function(id)
+var ProfileDetail = function(id,model)
 {
-	var profileModel = new ProfileModel();
+	var profileModel = model;
 	var data = profileModel.getDataById(id);
+	
 	 
 	this.win = Titanium.UI.createWindow({
 		backgroundColor:'#fff'

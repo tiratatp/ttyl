@@ -2,10 +2,10 @@ var ProfileModel = function(id)
 {
 	var user_id = id;
 	var info = [
-		{id:'1', infotype:'email', value:'plub101@gmail.com', visibility:'friends', offer:false},
-		{id:'2', infotype:'facebook', value:'wittawin', visibility:'followers', offer:true},
-		{id:'3', infotype:'twitter', value:'plub', visibility:'followers', offer:true},
-		{id:'4', infotype:'foursquare', value:'plub101', visibility:'friends', offer:false}
+		// {id:'1', infotype:'email', value:'plub101@gmail.com', visibility:'friends', offer:false},
+		// {id:'2', infotype:'facebook', value:'wittawin', visibility:'followers', offer:true},
+		// {id:'3', infotype:'twitter', value:'plub', visibility:'followers', offer:true},
+		// {id:'4', infotype:'foursquare', value:'plub101', visibility:'friends', offer:false}
 
 	];
 	
@@ -14,23 +14,25 @@ var ProfileModel = function(id)
 		return info;
 	}
 	
-	this.getContacts = function()
+	this.getContacts = function(callback)
 	{
-		var info = [];
-		var id = 1;
-		_db.getProfileByDisplayName("plub101", function(data){
+		// var info = [];
+		 var id = 1;
+		_db.getProfileByPersonId(user_id, function(data){
 			//alert(data);
 			contacts = data.rows[0].value.contacts;
-			alert(contacts+"x");
+			//alert(contacts+"x");
 			
 			for(var i=0; i<contacts.length; i++)
 			{
 				//alert(contacts[i].field_value1);
 				raw_item = contacts[i];
-				var item = {id:id, infotype:raw_item.field_type, value:raw_item.field_value1, visibility:'friends', offer:false};
+				var item = {id:id, infotype:raw_item.field_type, value:raw_item.field_value1, visibility:raw_item.visibility, offer:raw_item.offer};
 				id++;
 				info.push(item);
 			}
+			var infoSection = getContactInTableViewSection();
+			callback(infoSection);
 		});
 	}
 	
@@ -46,7 +48,7 @@ var ProfileModel = function(id)
 		return null;
 	}
 	
-	this.getContactInTableViewSection = function()
+	function getContactInTableViewSection()
 	{
 		var section = Titanium.UI.createTableViewSection({
 		});

@@ -21,21 +21,32 @@ var Profile = function()
 	var TheTable = Titanium.UI.createTableView({});
 	
 	
-	var profileModel = new ProfileModel('12345');
-	var CustomData = profileModel.getData();
+	//var profileModel = new ProfileModel('12345');
+	//var CustomData = profileModel.getData();
 	
-	var infoSection = profileModel.getContactInTableViewSection();
-	infoSection.addEventListener('click', function(e)
-	{
-		var id = e.row.id;
-		var profileDetail = new ProfileDetail(id);
-		tabGroup.activeTab.open(profileDetail.win);
-	});
-	
+	// var infoSection = profileModel.getContactInTableViewSection();
+	var resultInfoSection = null; 
+	var myprofileModel = null;				
 	var addSection = createAddSection();
 	var profileSection = createProfileSection();
+    _db.addEventListener('login',function(){
+        myprofileModel = new ProfileModel(_db.person_id);
+    	myprofileModel.getContacts(function(infoSection){
+    	  resultInfoSection = infoSection;
+    	 
+    	  resultInfoSection.addEventListener('click', function(e)
+			{
+				alert("click ,,,,,,,,,,,,,,,,");
+				var id = e.row.id;
+				var profileDetail = new ProfileDetail(id,myprofileModel);
+				tabGroup.activeTab.open(profileDetail.win);
+			});
 	
-	TheTable.setData([profileSection, infoSection, addSection]);
+			TheTable.setData([profileSection, resultInfoSection, addSection]);
+    	});
+    });
+	
+	
 
 	this.win.add(TheTable);
 	
