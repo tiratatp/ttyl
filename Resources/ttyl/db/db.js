@@ -304,6 +304,18 @@ var _db = new (function() {
 		}
 		
 	};
+	this.addRelationShip = function (person_id1,person_id2,contacts,callback){
+		var insertData = {
+			"person_id1":person_id1,
+			"person_id2":person_id2,
+			"contacts":contacts,
+			"type":"relationship"
+		};
+		_db.create(insertData,function(result){
+			callback(result);
+		});
+		
+	};
 	/*
 	var uuids=[];
 	connect({
