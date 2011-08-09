@@ -7,20 +7,19 @@ Ti.include('pubnub.js');
 var _db = new (function() {
 	var base_url = "https://nuttyknot:tiratat@ttyl.iriscouch.com/ttyl/",
 	//var base_url = "https://ttyl.iriscouch.com/ttyl/",
-		sqllite,
-		that = this,
-		callback = [],
-		retryQueue = [],
-		pubnub = PUBNUB.init({
-			publish_key : 'pub-1adea7b1-7891-482f-b000-a557cebf0cb6',
-			subscribe_key : 'sub-7811fc02-c296-11e0-8111-0d8d430db6cc',
-			ssl : false,
-			origin : 'pubsub.pubnub.com'
-		}),
-		uuid="";
-		
+	sqllite,
+	that = this,
+	callback = [],
+	retryQueue = [],
+	pubnub = PUBNUB.init({
+		publish_key : 'pub-1adea7b1-7891-482f-b000-a557cebf0cb6',
+		subscribe_key : 'sub-7811fc02-c296-11e0-8111-0d8d430db6cc',
+		ssl : false,
+		origin : 'pubsub.pubnub.com'
+	}),
+	uuid="";
+
 	this.person_id = undefined;
-		
 
 	// init
 	if(!sqllite) {
@@ -57,36 +56,35 @@ var _db = new (function() {
 			Ti.API.info("Connection Lost");
 		}
 	});
-	
-	// check for device uuid
-	
-	PUBNUB.uuid(function(remote_uuid) {
-		uuid = remote_uuid;
-	    Ti.API.info("Pubnub -> UUID: "+uuid);	   	
-	});
 
+	// check for device uuid
+
+	PUBNUB.uuid( function(remote_uuid) {
+		uuid = remote_uuid;
+		Ti.API.info("Pubnub -> UUID: "+uuid);
+	});
 	// ----------------------------------
 	// SEND MESSAGE
 	// ----------------------------------
 	/*
-	setInterval( function() {
-		pubnub.publish({
-			channel : 'ttyl',
-			message : {
-				example : "Hello World!",
-				'uuid': uuid,
-			},
-			callback : function(info) {
-				if (info[0])
-					Ti.API.info("Successfully Sent Message!");
-				else
-					// The internet is gone.
-					Ti.API.info("Failed! -> " + info[1]);
-			}
-		});
-	}, 1000 );
-	*/
-	
+	 setInterval( function() {
+	 pubnub.publish({
+	 channel : 'ttyl',
+	 message : {
+	 example : "Hello World!",
+	 'uuid': uuid,
+	 },
+	 callback : function(info) {
+	 if (info[0])
+	 Ti.API.info("Successfully Sent Message!");
+	 else
+	 // The internet is gone.
+	 Ti.API.info("Failed! -> " + info[1]);
+	 }
+	 });
+	 }, 1000 );
+	 */
+
 	function connect(options, callback) {
 		/*
 		* options[object]
@@ -414,13 +412,13 @@ var _db = new (function() {
 
 	this.onMeet = function(person_id, callback) {
 		var timestamp = new Date().getTime(),
-			payload = {
-				type:'meet',
-				person_id1:this.person_id,
-				person_id2:person_id,
-				created_datetime:timestamp,
-				place_id:'test',
-			};
+		payload = {
+			type:'meet',
+			person_id1:this.person_id,
+			person_id2:person_id,
+			created_datetime:timestamp,
+			place_id:'test',
+		};
 		_db.create(payload, function(data) {
 			if(callback) {
 				callback(data);
@@ -525,11 +523,7 @@ var _db = new (function() {
 	}
 	/* Meet */
 	// 2 types
-<<<<<<< HEAD
-	this.getMeetList = function(person_id, callback){
-=======
-	this.getMeetList = function(person_id) {
->>>>>>> ccc009f0d7bcbc5116476fad3b6671308eafc45e
+	this.getMeetList = function(person_id, callback) {
 		Titanium.API.info('_db.getMeetList -> person_id : ' + person_id);
 		connect({
 			object:"_design/meet",
@@ -548,15 +542,10 @@ var _db = new (function() {
 				value:false
 			}
 			]
-<<<<<<< HEAD
-		},function(data){
-			if(callback){
+		}, function(data) {
+			if(callback) {
 				callback(data);
 			}
-=======
-		}, function(data) {
-			Titanium.API.info('_db.getMeetList -> data(response) : ' + data);
->>>>>>> ccc009f0d7bcbc5116476fad3b6671308eafc45e
 		});
 	};
 })();
