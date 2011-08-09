@@ -34,24 +34,16 @@ var _friends = new (function() {
 			return;
 		}
 		data = data.rows;
-		for (var i = 0; i < data.length; i++) {
-			var datum = data[i].doc;
-			var row = Ti.UI.createTableViewRow({
-				height:100,
-				datum:datum,
-				backgroundColor:bgColor,
-			});
-			var rowView = Ti.UI.createView({
-				height:"100%",
-				top:0,
-				left:0
-			});
+		for (var i = 0; i < data.length; i++) {			
+			var datum = data[i].doc,
+				row;
+			Titanium.API.info(datum);			
 			if(!datum.picture) {
 				for(var j=0;j<datum.contacts.length;j++) {
 					Ti.API.info(' _friends -> renderRow: field_type: '+ datum.contacts[i].field_type);
 					switch(datum.contacts[i].field_type) {
 						case "email":
-							datum.picture = "http://www.gravatar.com/avatar/"+Titanium.Utils.md5HexDigest(datum.contacts[i].field_value1.toLowerCase())+"?d=identicon";
+							datum.picture = "http://www.gravatar.com/avatar/"+Titanium.Utils.md5HexDigest(datum.contacts[i].field_value1.toLowerCase())+"?d=identicon&s=50";
 							break;
 						case "twitter":
 							datum.picture = "http://api.twitter.com/1/users/profile_image?screen_name="+datum.contacts[i].field_value1+"&size=normal";
@@ -65,43 +57,37 @@ var _friends = new (function() {
 					}
 				}
 			}
-			if(datum.picture) {
-				Ti.API.info(' _friends -> renderRow: picture: '+ datum.picture);
-				var leftImage = Ti.UI.createImageView({
-					image:datum.picture,
-					width: 50,
-					left:"5%"
-				});
-				rowView.add(leftImage);
-			}
-			var title = Ti.UI.createLabel({
-				text:datum.display_name,
+			row = Ti.UI.createTableViewRow({
+				height:80,
 				font: {
 					fontSize:16,
 					fontWeight:'bold'
 				},
-				width:'auto',
-				textAlign:'left',
-				top:13,
-				left:70,
-				height:24
+				datum: datum,
+				title: datum.display_name,
+				backgroundColor:bgColor,
+				hasDetail: true,
 			});
+			
+			if(datum.picture) {
+				Ti.API.info(' _friends -> renderRow: picture: '+ datum.picture);
+				row.leftImage = datum.picture;
+			}
 
-			rowView.add(title);
-			row.add(rowView);
-			row.hasDetail=true;
 			rows.push(row);
 
 			row.addEventListener("click", onRowClick);
 		}
 		table.setData(rows);
 	}
-
-	_db.addEventListener("login", function() {
+	
+	function getFriend() {
 		_db.getFriends(_db.person_id, function(data) {
 			renderRow(data);
-		});
-	})
+		});		
+	}
+
+	_db.addEventListener("login", getFriend)
 	// add ui components
 	win.add(table);
 })();

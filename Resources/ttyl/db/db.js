@@ -2,47 +2,108 @@
  * @author tiratat.patana-anake
  */
 
+Ti.include('pubnub.js');
+
 var _db = new (function() {
 	var base_url = "https://nuttyknot:tiratat@ttyl.iriscouch.com/ttyl/",
-	//var base_url = "https://ttyl.iriscouch.com/ttyl/",	
-	sqllite,
-	that = this,
-	callback = [],
-	retryQueue = [];
+	//var base_url = "https://ttyl.iriscouch.com/ttyl/",
+		sqllite,
+		that = this,
+		callback = [],
+		retryQueue = [],
+		pubnub = PUBNUB.init({
+			publish_key : 'pub-1adea7b1-7891-482f-b000-a557cebf0cb6',
+			subscribe_key : 'sub-7811fc02-c296-11e0-8111-0d8d430db6cc',
+			ssl : false,
+			origin : 'pubsub.pubnub.com'
+		}),
+		uuid="";
+		
 	this.person_id = undefined;
-	
+		
+
 	// init
 	if(!sqllite) {
 		sqllite = Titanium.Database.open('ttyl.local');
-	}		
+	}
 	with(sqllite) {
-		//execute('CREATE TABLE IF NOT EXISTS "persons" ("person_id" VARCHAR PRIMARY KEY NOT NULL, "display_name" VARCHAR NOT NULL, "revision" VARCHAR NOT NULL )');					
+		//execute('CREATE TABLE IF NOT EXISTS "persons" ("person_id" VARCHAR PRIMARY KEY NOT NULL, "display_name" VARCHAR NOT NULL, "revision" VARCHAR NOT NULL )');
 		execute('CREATE TABLE IF NOT EXISTS "cache" ("request_url" VARCHAR PRIMARY KEY NOT NULL, "response" TEXT NOT NULL, "ETag" VARCHAR NOT NULL )');
-	}			
+	}
 	////
-	
+
 	// uncomment code below to clear cache
-	/*	
+	/*
 	(function() {
-		sqllite.execute("delete from cache");	
+	sqllite.execute("delete from cache");
 	}());
-	*/	
+	*/
+
+	// ----------------------------------
+	// LISTEN FOR MESSAGES
+	// ----------------------------------
+	pubnub.subscribe({
+		channel : 'ttyl',
+		callback : function(message) {
+			// Message RECEIVED!
+			//console.log(JSON.stringify(message));
+			if(message.uuid && message.uuid == uuid) {
+				return;
+			}
+			Ti.API.info("Pubnub!: "+message);
+		},
+		error : function() {
+			// The internet is gone.
+			Ti.API.info("Connection Lost");
+		}
+	});
+	
+	// check for device uuid
+	
+	PUBNUB.uuid(function(remote_uuid) {
+		uuid = remote_uuid;
+	    Ti.API.info("Pubnub -> UUID: "+uuid);	   	
+	});
+
+	// ----------------------------------
+	// SEND MESSAGE
+	// ----------------------------------
+	/*
+	setInterval( function() {
+		pubnub.publish({
+			channel : 'ttyl',
+			message : {
+				example : "Hello World!",
+				'uuid': uuid,
+			},
+			callback : function(info) {
+				if (info[0])
+					Ti.API.info("Successfully Sent Message!");
+				else
+					// The internet is gone.
+					Ti.API.info("Failed! -> " + info[1]);
+			}
+		});
+	}, 1000 );
+	*/
 	
 	function connect(options, callback) {
 		/*
-		 * options[object]
-		 * options[view]
-		 * options[args]
-		 * options[method]
-		 * options[data]
-		 * */
-		
+		* options[object]
+		* options[view]
+		* options[args]
+		* options[method]
+		* options[data]
+		* */
+
 		// building url
 		var url = options['url'] || base_url,
-			method = options['method'] || "GET",
-			data = ('data' in options?JSON.stringify(options['data']):null),
-			headers = {'Authorization': 'Basic ' +Titanium.Utils.base64encode('nuttyknot:tiratat')},
-			origArguments = arguments;
+		method = options['method'] || "GET",
+		data = ('data' in options?JSON.stringify(options['data']):null),
+		headers = {
+			'Authorization': 'Basic ' +Titanium.Utils.base64encode('nuttyknot:tiratat')
+		},
+		origArguments = arguments;
 		if("object" in options && "view" in options) {
 			url+=(options['object']+"/_view/"+options['view']);
 		}
@@ -50,9 +111,9 @@ var _db = new (function() {
 			url+="?";
 			for(var i=0, argsLength = options['args'].length;i<argsLength;i++) {
 				var arg = options['args'][i],
-					key = arg['key'],
-					value = arg['value'],
-					typeOfValue = typeof(value);					
+				key = arg['key'],
+				value = arg['value'],
+				typeOfValue = typeof(value);
 				Ti.API.info('Arg: key->'+ key +' value->'+ value + " type: "+ typeOfValue);
 				if(typeOfValue == "string") {
 					url+=(Titanium.Network.encodeURIComponent(key)+"=\""+Titanium.Network.encodeURIComponent(value)+"\"&");
@@ -63,38 +124,38 @@ var _db = new (function() {
 				}
 			}
 		}
-		Titanium.API.info(' _db.connect -> XHR opening: ' + url);			
-		
+		Titanium.API.info(' _db.connect -> XHR opening: ' + url);
+
 		if(method == "GET") {
 			// perform request with If-None-Match
 			var rows = sqllite.execute('SELECT response, ETag FROM cache WHERE request_url = ?',url),
-				response,
-				ETag;
-			if (rows.isValidRow()) {   
-			    response = rows.fieldByName('response');
-			    ETag = rows.fieldByName('ETag');
+			response,
+			ETag;
+			if (rows.isValidRow()) {
+				response = rows.fieldByName('response');
+				ETag = rows.fieldByName('ETag');
 			}
 			rows.close();
 			Ti.API.info(" _db.connect -> Cached ETag: "+ETag);
 			if(response && ETag) {
-				headers["If-None-Match"] = ETag;	
-			}						
-		} 
-		
+				headers["If-None-Match"] = ETag;
+			}
+		}
+
 		if(data) {
 			headers["Content-Type"] = 'application/json';
 		}
-		
-		try {		
+
+		try {
 			var xhr = Titanium.Network.createHTTPClient({
 				onload: function() {
-					if(this.readyState == 1) {	
+					if(this.readyState == 1) {
 						return;
 					}
 					if(method == "GET") {
 						var ETag = this.getResponseHeader('ETag');
-						response = this.responseText?this.responseText.replace(/\n/g,""):"{}";				
-						Ti.API.info(" _db.connect -> Cache MISSED! ("+url+")");				
+						response = this.responseText?this.responseText.replace(/\n/g,""):"{}";
+						Ti.API.info(" _db.connect -> Cache MISSED! ("+url+")");
 						Ti.API.info(" _db.connect -> Got response from REAL request New ETag: "+ETag);
 						Ti.API.info(sqllite.execute("INSERT OR REPLACE INTO cache (request_url, response, ETag) VALUES (?,?,?)",url,response,ETag));
 						Titanium.API.info(' _db.connect -> Response: ' + response);
@@ -120,18 +181,18 @@ var _db = new (function() {
 						Titanium.API.info(' _db.connect -> Error: ' + e.error);
 						retryQueue.push(origArguments);
 					}
-				},	
+				},
 				timeout: 60000,
-			});								
-			
-			xhr.open(method, url);				
-			
+			});
+
+			xhr.open(method, url);
+
 			for (var header in headers) {
 				Ti.API.info(' Header: name->'+header +' value->'+headers[header]);
-				xhr.setRequestHeader(header, headers[header]);	
-			}										
+				xhr.setRequestHeader(header, headers[header]);
+			}
 			Titanium.API.info(' _db.connect -> XHR send data: ' + data);
-			xhr.send(data);	
+			xhr.send(data);
 		} catch (e) {
 			Titanium.API.info(e);
 			Titanium.API.info(' _db.connect -> Exception: ' + e.error);
@@ -150,20 +211,20 @@ var _db = new (function() {
 		}, callback);
 	};
 	this.getProfileByPersonId = function(id,callback) {
-		if(id){
-		connect({
-			url:"https://ttyl.iriscouch.com/ttyl/_design/person/_view/by_person_id?key=" + '"' + id + '"'
-			//object:"person",
-			//view:"by_display_name",
-			//args:arg,
-		}, callback);
-		}else{
+		if(id) {
+			connect({
+				url:"https://ttyl.iriscouch.com/ttyl/_design/person/_view/by_person_id?key=" + '"' + id + '"'
+				//object:"person",
+				//view:"by_display_name",
+				//args:arg,
+			}, callback);
+		} else {
 			callback("not found person id");
 		}
 	};
 	this.addContacts = function(id,type,value,visibility,offer,callback) {
-		if(id){
-			 _db.getProfileByPersonId(id, function(data) {
+		if(id) {
+			_db.getProfileByPersonId(id, function(data) {
 				if(data&&data.rows) {
 					Titanium.API.info("data --------------> "+data);
 					var contactlist = typeof(data.rows[0].value.contacts)!= undefined || typeof(data.rows[0].value.contacts)!= null ?data.rows[0].value.contacts:[];
@@ -173,13 +234,13 @@ var _db = new (function() {
 						"visibility": visibility,
 						"offer" : offer
 					});
-					   var dateT = new Date();
-			        dateTime = dateT.getYear()
-			        + '/' + (dateT.getMonth()+1)
-			        + '/' + (dateT.getDate())
-			        + ' ' + (dateT.getHours())
-			        + ':' + (dateT.getMinutes())
-			        + ':' + (dateT.getSeconds());       
+					var dateT = new Date();
+					dateTime = dateT.getYear()
+					+ '/' + (dateT.getMonth()+1)
+					+ '/' + (dateT.getDate())
+					+ ' ' + (dateT.getHours())
+					+ ':' + (dateT.getMinutes())
+					+ ':' + (dateT.getSeconds());
 					var insertData = {
 						"_id": data.rows[0].value._id ,
 						"_rev":data.rows[0].value._rev ,
@@ -188,50 +249,49 @@ var _db = new (function() {
 						"contacts":contactlist,
 						"created_datetime":dateTime
 					};
-					_db.create(insertData,function(result){
+					_db.create(insertData, function(result) {
 						callback(result);
 					});
 				}
-		});
-		}else{
-				
-				callback("not found person id");
+			});
+		} else {
+
+			callback("not found person id");
 		}
-		
+
 	};
 	this.updateContacts = function(id,type,oldvalue,newvalue,visibility,offer,callback) {
-		if(id){
-			 _db.getProfileByPersonId(id,function(data) {
+		if(id) {
+			_db.getProfileByPersonId(id, function(data) {
 				if(data&&data.rows) {
 					Titanium.API.info("data --------------> "+data);
 					var contactlist = typeof(data.rows[0].value.contacts)!= undefined || typeof(data.rows[0].value.contacts)!= null ?data.rows[0].value.contacts:[];
 					var targetIndex = [];
-					for(var i = 0 ; i< contactlist.length ;i++ ){
+					for(var i = 0 ; i< contactlist.length ;i++ ) {
 						Titanium.API.info("contact type --------------> "+contactlist[i].field_type);
 						Titanium.API.info("contact value --------------> "+contactlist[i].field_value1);
-						if(contactlist[i].field_type == type && contactlist[i].field_value1 == oldvalue){
+						if(contactlist[i].field_type == type && contactlist[i].field_value1 == oldvalue) {
 							targetIndex.push(i);
 						}
 					}
-						var contact = {
-							"field_value1": newvalue,
-							"field_type": type,
-							"visibility": visibility,
-							"offer" : offer
+					var contact = {
+						"field_value1": newvalue,
+						"field_type": type,
+						"visibility": visibility,
+						"offer" : offer
+					}
+					if(targetIndex.length>0) {
+						for(var j = 0 ; j <  targetIndex.length ;j++) {
+							contactlist.splice(targetIndex[j],1,contact);
 						}
-					if(targetIndex.length>0){
-							for(var j = 0 ; j <  targetIndex.length ;j++){
-								contactlist.splice(targetIndex[j],1,contact);	
-							}
-						
-						
-						   var dateT = new Date();
-				        dateTime = dateT.getYear()
-				        + '/' + (dateT.getMonth()+1)
-				        + '/' + (dateT.getDate())
-				        + ' ' + (dateT.getHours())
-				        + ':' + (dateT.getMinutes())
-				        + ':' + (dateT.getSeconds());       
+
+						var dateT = new Date();
+						dateTime = dateT.getYear()
+						+ '/' + (dateT.getMonth()+1)
+						+ '/' + (dateT.getDate())
+						+ ' ' + (dateT.getHours())
+						+ ':' + (dateT.getMinutes())
+						+ ':' + (dateT.getSeconds());
 						var insertData = {
 							"_id": data.rows[0].value._id ,
 							"_rev":data.rows[0].value._rev ,
@@ -240,47 +300,46 @@ var _db = new (function() {
 							"contacts":contactlist,
 							"created_datetime":dateTime
 						};
-						_db.create(insertData,function(result){
+						_db.create(insertData, function(result) {
 							callback(result);
 						});
-					}else{
+					} else {
 						callback("not found contact");
 					}
 				}
-		});
-		}else{
-				
-				callback("not found person id");
+			});
+		} else {
+
+			callback("not found person id");
 		}
-		
+
 	};
 	this.deleteContacts = function(id,type,value,callback) {
-		if(id){
-			 _db.getProfileByPersonId(id,function(data) {
+		if(id) {
+			_db.getProfileByPersonId(id, function(data) {
 				if(data&&data.rows) {
 					Titanium.API.info("data --------------> "+data);
 					var contactlist = typeof(data.rows[0].value.contacts)!= undefined || typeof(data.rows[0].value.contacts)!= null ?data.rows[0].value.contacts:[];
 					var targetIndex = [];
-					for(var i = 0 ; i< contactlist.length ;i++ ){
+					for(var i = 0 ; i< contactlist.length ;i++ ) {
 						Titanium.API.info("contact type --------------> "+contactlist[i].field_type);
 						Titanium.API.info("contact value --------------> "+contactlist[i].field_value1);
-						if(contactlist[i].field_type == type && contactlist[i].field_value1 == value){
+						if(contactlist[i].field_type == type && contactlist[i].field_value1 == value) {
 							targetIndex.push(i);
 						}
 					}
-					if(targetIndex.length>0){
-						for(var j = 0 ; j <  targetIndex.length ;j++){
-							contactlist.splice(targetIndex[j],1);	
+					if(targetIndex.length>0) {
+						for(var j = 0 ; j <  targetIndex.length ;j++) {
+							contactlist.splice(targetIndex[j],1);
 						}
-						
-						
-						   var dateT = new Date();
-				        dateTime = dateT.getYear()
-				        + '/' + (dateT.getMonth()+1)
-				        + '/' + (dateT.getDate())
-				        + ' ' + (dateT.getHours())
-				        + ':' + (dateT.getMinutes())
-				        + ':' + (dateT.getSeconds());       
+
+						var dateT = new Date();
+						dateTime = dateT.getYear()
+						+ '/' + (dateT.getMonth()+1)
+						+ '/' + (dateT.getDate())
+						+ ' ' + (dateT.getHours())
+						+ ':' + (dateT.getMinutes())
+						+ ':' + (dateT.getSeconds());
 						var insertData = {
 							"_id": data.rows[0].value._id ,
 							"_rev":data.rows[0].value._rev ,
@@ -289,32 +348,31 @@ var _db = new (function() {
 							"contacts":contactlist,
 							"created_datetime":dateTime
 						};
-						_db.create(insertData,function(result){
+						_db.create(insertData, function(result) {
 							callback(result);
 						});
-					}else{
+					} else {
 						callback("not found contact");
 					}
-					
+
 				}
-		});
-		}else{
-				
-				callback("not found person id");
+			});
+		} else {
+
+			callback("not found person id");
 		}
-		
+
 	};
-	this.addRelationShip = function (person_id1,person_id2,contacts,callback){
+	this.addRelationShip = function (person_id1,person_id2,contacts,callback) {
 		var insertData = {
 			"person_id1":person_id1,
 			"person_id2":person_id2,
 			"contacts":contacts,
 			"type":"relationship"
 		};
-		_db.create(insertData,function(result){
+		_db.create(insertData, function(result) {
 			callback(result);
 		});
-		
 	};
 	/*
 	var uuids=[];
@@ -353,19 +411,35 @@ var _db = new (function() {
 			(callback[e])[i].apply(data);
 		}
 	}
+
 	this.onMeet = function(person_id, callback) {
-		var timestamp = new Date().getTime();
-		create({
-			type:'meet',
-			person_id1:this.person_id,
-			person_id2:person_id,
-			created_datetime:timestamp,
-			place_id:'test',
-		}, function(data) {
+		var timestamp = new Date().getTime(),
+			payload = {
+				type:'meet',
+				person_id1:this.person_id,
+				person_id2:person_id,
+				created_datetime:timestamp,
+				place_id:'test',
+			};
+		_db.create(payload, function(data) {
 			if(callback) {
 				callback(data);
 			}
 			onEvent("meet",data);
+		});
+		pubnub.publish({
+			channel : 'ttyl',
+			message : {
+				from: uuid,
+				'payload': payload,
+			},
+			callback : function(info) {
+				if (info[0])
+					Ti.API.info("Successfully Sent Message!");
+				else
+					// The internet is gone.
+					Ti.API.info("Failed! -> " + info[1]);
+			}
 		});
 	};
 	this.onLoggedIn = function(e, callback) {
@@ -377,19 +451,20 @@ var _db = new (function() {
 			};
 			onEvent("login");
 		}
+
 		Titanium.API.info(' _db.onLoggedIn: ' + e.success + ' '+ e.uid);
 		if(!e.uid) {
 			return false;
 		}
 		var uid = e.uid,
-			logged_in_person = Ti.App.Properties.getString("logged_in_person","");
-			
+		logged_in_person = Ti.App.Properties.getString("logged_in_person","");
+
 		if(logged_in_person) {
 			that.person_id = logged_in_person;
-			Titanium.API.info(' _db.onLoggedIn-> fetch person_id from app property : ' + that.person_id);			
-	    	privateCallback();
-	    	return;
-		}	    		
+			Titanium.API.info(' _db.onLoggedIn-> fetch person_id from app property : ' + that.person_id);
+			privateCallback();
+			return;
+		}
 
 		connect({
 			object:"_design/person",
@@ -422,6 +497,14 @@ var _db = new (function() {
 			}
 		});
 	};
+	this.onLoggedOut = function(e, callback) {
+		Titanium.API.info(' _db.onLoggedOut: ' + e.success + ' '+ e.uid);
+		Ti.App.Properties.removeProperty("logged_in_person");
+		with(sqllite) {
+			execute("delete from cache");
+		}
+		onEvent("logout");
+	};
 	this.getFriends = function(person_id, callback) {
 		Titanium.API.info(' _db.getFriends-> person_id : ' + person_id);
 		connect({
@@ -434,30 +517,46 @@ var _db = new (function() {
 				key:"include_docs",
 				value:true
 			}]
-		}, function(data) {			
+		}, function(data) {
 			if(callback) {
 				callback(data);
 			}
 		});
 	}
-	
 	/* Meet */
 	// 2 types
+<<<<<<< HEAD
 	this.getMeetList = function(person_id, callback){
+=======
+	this.getMeetList = function(person_id) {
+>>>>>>> ccc009f0d7bcbc5116476fad3b6671308eafc45e
 		Titanium.API.info('_db.getMeetList -> person_id : ' + person_id);
 		connect({
 			object:"_design/meet",
 			view:"by_person_id",
-			args:[
-				{key:"startkey", value:[person_id,{}]},
-				{key:"endkey", value:[person_id]},
-				{key:"descending", value:true},
-				{key:"inclusive_end", value:false}
+			args:[{
+				key:"startkey",
+				value:[person_id,{}]
+			},{
+				key:"endkey",
+				value:[person_id]
+			},{
+				key:"descending",
+				value:true
+			},{
+				key:"inclusive_end",
+				value:false
+			}
 			]
+<<<<<<< HEAD
 		},function(data){
 			if(callback){
 				callback(data);
 			}
+=======
+		}, function(data) {
+			Titanium.API.info('_db.getMeetList -> data(response) : ' + data);
+>>>>>>> ccc009f0d7bcbc5116476fad3b6671308eafc45e
 		});
 	};
 })();
