@@ -35,9 +35,11 @@ var _friends = new (function() {
 		}
 		data = data.rows;
 		for (var i = 0; i < data.length; i++) {
+			
 			var datum = data[i].doc;
+			Titanium.API.info(datum);
 			var row = Ti.UI.createTableViewRow({
-				height:100,
+				height:70,
 				datum:datum,
 				backgroundColor:bgColor,
 			});
@@ -51,7 +53,7 @@ var _friends = new (function() {
 					Ti.API.info(' _friends -> renderRow: field_type: '+ datum.contacts[i].field_type);
 					switch(datum.contacts[i].field_type) {
 						case "email":
-							datum.picture = "http://www.gravatar.com/avatar/"+Titanium.Utils.md5HexDigest(datum.contacts[i].field_value1.toLowerCase())+"?d=identicon";
+							datum.picture = "http://www.gravatar.com/avatar/"+Titanium.Utils.md5HexDigest(datum.contacts[i].field_value1.toLowerCase())+"?d=identicon&s=50";
 							break;
 						case "twitter":
 							datum.picture = "http://api.twitter.com/1/users/profile_image?screen_name="+datum.contacts[i].field_value1+"&size=normal";
@@ -70,7 +72,8 @@ var _friends = new (function() {
 				var leftImage = Ti.UI.createImageView({
 					image:datum.picture,
 					width: 50,
-					left:"5%"
+					left: "5%",
+					top: 10,
 				});
 				rowView.add(leftImage);
 			}
@@ -82,8 +85,8 @@ var _friends = new (function() {
 				},
 				width:'auto',
 				textAlign:'left',
-				top:13,
-				left:70,
+				top:20,
+				left:80,
 				height:24
 			});
 
@@ -96,12 +99,14 @@ var _friends = new (function() {
 		}
 		table.setData(rows);
 	}
-
-	_db.addEventListener("login", function() {
+	
+	function getFriend() {
 		_db.getFriends(_db.person_id, function(data) {
 			renderRow(data);
-		});
-	})
+		});		
+	}
+
+	_db.addEventListener("login", getFriend)
 	// add ui components
 	win.add(table);
 })();
