@@ -23,11 +23,11 @@ var ProfileModel = function(id)
 			contacts = data.rows[0].value.contacts;
 			//alert(contacts+"x");
 			
-			for(var i=0; i<contacts.length; i++)
+			for(var i=1; i<contacts.length; i++)
 			{
 				//alert(contacts[i].field_value1);
 				raw_item = contacts[i];
-				var item = {id:id, infotype:raw_item.field_type, value:raw_item.field_value1, visibility:raw_item.visibility, offer:raw_item.offer};
+				var item = {id:id, infotype:raw_item.field_type, value:raw_item.field_value1, visibility:(raw_item.visibility)?raw_item.visibility:"friends", offer:(raw_item.offer)?raw_item.offer:false};
 				id++;
 				info.push(item);
 			}
@@ -44,7 +44,7 @@ var ProfileModel = function(id)
 			contacts = data.rows[0].value.contacts;
 			//alert(contacts+"x");
 			
-			for(var i=0; i<contacts.length; i++)
+			for(var i=1; i<contacts.length; i++)
 			{
 				//alert(contacts[i].field_value1);
 				raw_item = contacts[i];
@@ -68,7 +68,9 @@ var ProfileModel = function(id)
 		}
 		return null;
 	}
-	
+	this.getData = function(){
+		return info;
+	}
 	function getContactInTableViewSection()
 	{
 		var section = Titanium.UI.createTableViewSection({

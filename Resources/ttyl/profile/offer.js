@@ -10,19 +10,16 @@ var Offer = function(receiver_id)
 		backgroundColor:'#fff'
 	});
 		
-	this.tab = Titanium.UI.createTab({
-		icon:'KS_nav_views.png',
-		title:'Offer',
-		window:this.win
-	});
+	// this.tab = Titanium.UI.createTab({
+		// icon:'KS_nav_views.png',
+		// title:'Offer',
+		// window:this.win
+	// });
 	
 	var that = this;
 	var TheTable = Titanium.UI.createTableView({});
-	
-	
 	//var profileModel = new ProfileModel('12345');
 	//var CustomData = profileModel.getData();
-	
 	// var infoSection = profileModel.getContactInTableViewSection();
 	var resultInfoSection = null; 
 	var myprofileModel = null;				
@@ -32,21 +29,40 @@ var Offer = function(receiver_id)
 	        myprofileModel = new ProfileModel(_db.person_id);
 	    	myprofileModel.getOffers(function(infoSection){
 	    	  resultInfoSection = infoSection;
-	    	 
+	    	  var initialData = myprofileModel.getData();
+	    	  for(var index = 0; index < initialData.length; index++ ){
+	    	  	 if(initialData[index].offer == "true"){
+	    	  	 	contacts.push(initialData[index]);
+	    	  	 }
+	    	  	 
+	    	  }
 	    	  resultInfoSection.addEventListener('click', function(e)
 				{
-					alert("click  offer,,,,,,,,,,,,,,,,");
+					// alert("click  offer,,,,,,,,,,,,,,,,");
 					var row = e.row;
 					row.hasCheck = !row.hasCheck;
 					var id = row.id;
 					var detail = myprofileModel.getDataById(id);
-					if(row.hasCheck){
-						contacts.push(detail);
-					}else if(!row.hasCheck){
+					if(row.hasCheck ){
+						var found = false;
 						for(var i = 0 ;i<contacts.length;i++){
 							if(contacts[i] == detail){
-								contacts.splice(i,1);
+								found = true;
 							}
+						
+						}
+						if(!found){
+							    contacts.push(detail);
+						}
+					}else if(!row.hasCheck){
+						var deleteIdex = -1;
+						for(var i = 0 ;i<contacts.length;i++){
+							if(contacts[i] == detail){
+								deleteIdex = i;
+							}
+						}
+						if(deleteIdex != -1){
+						    contacts.splice(deleteIdex,1);
 						}
 					}
 					// var profileDetail = new ProfileDetail(id,myprofileModel);
@@ -60,21 +76,40 @@ var Offer = function(receiver_id)
         myprofileModel = new ProfileModel(_db.person_id);
     	myprofileModel.getOffers(function(infoSection){
     	  resultInfoSection = infoSection;
-    	 
+    	  var initialData = myprofileModel.getData();
+    	  for(var index = 0; index < initialData.length; index++ ){
+    	  	 if(initialData[index].offer == "true"){
+	    	  	 	contacts.push(initialData[index]);
+    	  	 }
+	    	  	 
+    	  }
     	  resultInfoSection.addEventListener('click', function(e)
 			{
-				alert("click  offer,,,,,,,,,,,,,,,,");
+				// alert("click  offer,,,,,,,,,,,,,,,,");
 				var row = e.row;
 				row.hasCheck = !row.hasCheck;
 				var id = row.id;
 				var detail = myprofileModel.getDataById(id);
 				if(row.hasCheck){
-					contacts.push(detail);
+					var found = false;
+						for(var i = 0 ;i<contacts.length;i++){
+							if(contacts[i] == detail){
+								found = true;
+							}
+						
+						}
+						if(!found){
+							    contacts.push(detail);
+						}
 				}else if(!row.hasCheck){
+					var deleteIdex = -1;
 					for(var i = 0 ;i<contacts.length;i++){
 						if(contacts[i] == detail){
-							contacts.splice(i,1);
+							deleteIdex = i;
 						}
+					}
+					if(deleteIdex != -1){
+					    contacts.splice(deleteIdex,1);
 					}
 				}
 		
@@ -108,7 +143,9 @@ var Offer = function(receiver_id)
 		row.add(value);
 		row.addEventListener('click', function(){
 			var insertContacts = [];
+			// alert(contacts.length);
 			//{id:id, infotype:raw_item.field_type, value:raw_item.field_value1, visibility:raw_item.visibility, offer:raw_item.offer};
+			
 			for(var i = 0 ;i<contacts.length;i++){
 				var data = {"field_type":contacts[i].infotype,
 							"field_value1":contacts[i].value,
@@ -117,10 +154,13 @@ var Offer = function(receiver_id)
 						};
 				insertContacts.push(data);		
 			}
-			
+			if(insertContacts.length >0){
 			 _db.addRelationShip(user_id,_db.person_id,insertContacts,function(result){
-				alert("success");
+				that.win.close();				
 			 });
+			}else{
+				alert("no contact offer");
+			}
 		
 		});
 		
