@@ -2,10 +2,10 @@ var ProfileModel = function(id)
 {
 	var user_id = id;
 	var info = [
-		{id:'1', infotype:'email', value:'plub101@gmail.com', visibility:'friends', offer:false},
-		{id:'2', infotype:'facebook', value:'wittawin', visibility:'followers', offer:true},
-		{id:'3', infotype:'twitter', value:'plub', visibility:'followers', offer:true},
-		{id:'4', infotype:'foursquare', value:'plub101', visibility:'friends', offer:false}
+		// {id:'1', infotype:'email', value:'plub101@gmail.com', visibility:'friends', offer:false},
+		// {id:'2', infotype:'facebook', value:'wittawin', visibility:'followers', offer:true},
+		// {id:'3', infotype:'twitter', value:'plub', visibility:'followers', offer:true},
+		// {id:'4', infotype:'foursquare', value:'plub101', visibility:'friends', offer:false}
 
 	];
 	
@@ -14,23 +14,46 @@ var ProfileModel = function(id)
 		return info;
 	}
 	
-	this.getContacts = function()
+	this.getContacts = function(callback)
 	{
-		var info = [];
-		var id = 1;
-		_db.getProfileByDisplayName("plub101", function(data){
+		// var info = [];
+		 var id = 1;
+		_db.getProfileByPersonId(user_id, function(data){
 			//alert(data);
 			contacts = data.rows[0].value.contacts;
-			alert(contacts+"x");
+			//alert(contacts+"x");
 			
-			for(var i=0; i<contacts.length; i++)
+			for(var i=1; i<contacts.length; i++)
 			{
 				//alert(contacts[i].field_value1);
 				raw_item = contacts[i];
-				var item = {id:id, infotype:raw_item.field_type, value:raw_item.field_value1, visibility:'friends', offer:false};
+				var item = {id:id, infotype:raw_item.field_type, value:raw_item.field_value1, visibility:(raw_item.visibility)?raw_item.visibility:"friends", offer:(raw_item.offer)?raw_item.offer:false};
 				id++;
 				info.push(item);
 			}
+			var infoSection = getContactInTableViewSection();
+			callback(infoSection);
+		});
+	}
+	this.getOffers = function(callback)
+	{
+		// var info = [];
+		 var id = 1;
+		_db.getProfileByPersonId(user_id, function(data){
+			//alert(data);
+			contacts = data.rows[0].value.contacts;
+			//alert(contacts+"x");
+			
+			for(var i=1; i<contacts.length; i++)
+			{
+				//alert(contacts[i].field_value1);
+				raw_item = contacts[i];
+				var item = {id:id, infotype:raw_item.field_type, value:raw_item.field_value1, visibility:raw_item.visibility, offer:raw_item.offer};
+				id++;
+				info.push(item);
+			}
+			var infoSection = getContactOfferInTableViewSection();
+			callback(infoSection);
 		});
 	}
 	
@@ -45,8 +68,10 @@ var ProfileModel = function(id)
 		}
 		return null;
 	}
-	
-	this.getContactInTableViewSection = function()
+	this.getData = function(){
+		return info;
+	}
+	function getContactInTableViewSection()
 	{
 		var section = Titanium.UI.createTableViewSection({
 		});
@@ -90,6 +115,56 @@ var ProfileModel = function(id)
 			row.add(visibility);
 		
 			row.hasChild=true;
+			row.className = 'profile_row';
+			
+			section.add(row);
+		}
+		return section;
+	}
+	function getContactOfferInTableViewSection()
+	{
+		var section = Titanium.UI.createTableViewSection({
+		});
+		
+		for (var i = 0; i <= info.length - 1; i++){
+	
+			var row = Titanium.UI.createTableViewRow();
+			
+			row.id = info[i].id;
+		
+			var icon =  Titanium.UI.createImageView({
+				image:getInfoIcon(info[i].infotype),
+				width:32,
+				height:32,
+				left:4,
+				top:9
+			});
+			
+			var value = Titanium.UI.createLabel({
+				text:info[i].value,
+				font:{fontSize:16,fontWeight:'bold'},
+				width:'auto',
+				textAlign:'left',
+				top:13,
+				left:40,
+				height:24
+			});
+			
+			var visibility =  Titanium.UI.createLabel({
+				text:info[i].visibility,
+				font:{fontSize:12},
+				width:'auto',
+				textAlign:'left',
+				top:13,
+				right:30,
+				height:24
+			});
+			
+			row.add(icon);
+			row.add(value);
+			row.add(visibility);
+			var offer = info[i].offer||"false";						
+			row.hasCheck = (offer == "true")?true:false;			
 			row.className = 'profile_row';
 			
 			section.add(row);

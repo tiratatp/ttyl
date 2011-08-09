@@ -59,11 +59,6 @@ var feed = {
 			height:'10%',
 			width:'100%',
 		});
-		
-		addButton.addEventListener('click',function(){
-			_db.getMeetList("845489b10e613b0a29f2a69ce0003ded");
-		});
-		
 		//bind data
 		f.win.add(addButton);
 		f.win.add(f.table);

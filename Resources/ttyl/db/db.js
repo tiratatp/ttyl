@@ -4,25 +4,30 @@
 
 var _db = new (function() {
 	var base_url = "https://nuttyknot:tiratat@ttyl.iriscouch.com/ttyl/",
-	//var base_url = "https://ttyl.iriscouch.com/ttyl/",
-	xhr = Titanium.Network.createHTTPClient(),
-	sqllite;
-	
-	function initLocalDB() {
-		if(!sqllite) {
-			sqllite = Titanium.Database.open('ttyl.local');
-		}		
-		with(sqllite) {
-			execute('CREATE TABLE IF NOT EXISTS "persons" ("person_id" VARCHAR PRIMARY KEY NOT NULL, "display_name" VARCHAR NOT NULL, "revision" VARCHAR NOT NULL )');					
-			execute('CREATE TABLE IF NOT EXISTS "cache" ("request_url" VARCHAR PRIMARY KEY NOT NULL, "response" TEXT NOT NULL, "ETag" VARCHAR NOT NULL )');
-		}	
-	}
-	initLocalDB();
-	
+	//var base_url = "https://ttyl.iriscouch.com/ttyl/",	
+	sqllite,
+	that = this,
+	callback = [],
+	retryQueue = [];
 	this.person_id = undefined;
-	var that = this;
-	var callback = [];
-
+	
+	// init
+	if(!sqllite) {
+		sqllite = Titanium.Database.open('ttyl.local');
+	}		
+	with(sqllite) {
+		//execute('CREATE TABLE IF NOT EXISTS "persons" ("person_id" VARCHAR PRIMARY KEY NOT NULL, "display_name" VARCHAR NOT NULL, "revision" VARCHAR NOT NULL )');					
+		execute('CREATE TABLE IF NOT EXISTS "cache" ("request_url" VARCHAR PRIMARY KEY NOT NULL, "response" TEXT NOT NULL, "ETag" VARCHAR NOT NULL )');
+	}			
+	////
+	
+	// uncomment code below to clear cache
+	/*	
+	(function() {
+		sqllite.execute("delete from cache");	
+	}());
+	*/	
+	
 	function connect(options, callback) {
 		/*
 		 * options[object]
@@ -33,94 +38,110 @@ var _db = new (function() {
 		 * */
 		
 		// building url
-		var url=options['url'] || base_url,
-		method = options['method'] || "GET",
-		data = ('data' in options?JSON.stringify(options['data']):null);
+		var url = options['url'] || base_url,
+			method = options['method'] || "GET",
+			data = ('data' in options?JSON.stringify(options['data']):null),
+			headers = {'Authorization': 'Basic ' +Titanium.Utils.base64encode('nuttyknot:tiratat')},
+			origArguments = arguments;
 		if("object" in options && "view" in options) {
 			url+=(options['object']+"/_view/"+options['view']);
 		}
-		if('args' in options) {
+		if("args" in options) {
 			url+="?";
-			for(var index in options['args']) {
-				var arg = options['args'][index];
-				Ti.API.info('Arg: key->'+arg['key'] +' value->'+arg['value']);
-				Ti.API.info('Typeof Arg: key->'+typeof(arg['key']) +' Typeof value->'+typeof(arg['value']));
-				if(typeof(arg['value']) == "string") {
-					url+=(Titanium.Network.encodeURIComponent(arg['key'])+"=\""+Titanium.Network.encodeURIComponent(arg['value'])+"\"&");
+			for(var i=0, argsLength = options['args'].length;i<argsLength;i++) {
+				var arg = options['args'][i],
+					key = arg['key'],
+					value = arg['value'],
+					typeOfValue = typeof(value);					
+				Ti.API.info('Arg: key->'+ key +' value->'+ value + " type: "+ typeOfValue);
+				if(typeOfValue == "string") {
+					url+=(Titanium.Network.encodeURIComponent(key)+"=\""+Titanium.Network.encodeURIComponent(value)+"\"&");
 				} else if(typeof(arg['value'] == "object")) {
 					url+=(Titanium.Network.encodeURIComponent(arg['key'])+"="+JSON.stringify(arg['value'])+"&");
 				} else {
-					url+=(Titanium.Network.encodeURIComponent(arg['key'])+"="+Titanium.Network.encodeURIComponent(arg['value'])+"&");
+					url+=(Titanium.Network.encodeURIComponent(key)+"="+Titanium.Network.encodeURIComponent(value)+"&");
 				}
-
 			}
 		}
-		Titanium.API.info(' _db.connect -> XHR open: ' + url);
-		
-		var authstr = 'Basic ' +Titanium.Utils.base64encode('nuttyknot:tiratat');		
-		
-		function real_connect() {
-			xhr.onload = function() {
-				var ETag = this.getResponseHeader('ETag');
-				Ti.API.info(" _db.connect -> Got response from REAL request New ETag: "+ETag);
-				var newResponseText = this.responseText?this.responseText.replace(/\n/g,""):"{}";
-				Titanium.API.info(' _db.connect -> Response: ' + newResponseText);
-				var jsonObject = JSON.parse(newResponseText);
-				sqllite.execute("INSERT OR REPLACE INTO cache (request_url, response, ETag) VALUES (?,?,?)",this.location,newResponseText,ETag);
-				if(callback) {
-					callback(jsonObject);
-				}
-			};
-			xhr.onerror = function() {
-				Titanium.API.info(' _db.connect -> Error: ' + this.responseText);
-			};
-			xhr.open(method, url);		
-			xhr.setRequestHeader('Authorization', authstr);		
-			Titanium.API.info(' _db.connect -> XHR send data: ' + data);
-			if(data) {
-				xhr.setRequestHeader('Content-Type', 'application/json');
-			}
-			xhr.send(data);	
-		}
+		Titanium.API.info(' _db.connect -> XHR opening: ' + url);			
 		
 		if(method == "GET") {
-			// fire HEAD request
-			Ti.API.info(" _db.connect -> Perform HEAD request");
-			xhr.onload = function() {				
-				var ETag = this.getResponseHeader('ETag');
-				Ti.API.info(" _db.connect -> Got response from HEAD request ETag: "+ETag);
-				var rows = sqllite.execute('SELECT response FROM cache WHERE request_url = ? AND ETag = ?',this.location,ETag);
-				var response;  
-				if (rows.isValidRow()) {   
-				    response = rows.fieldByName('response')
-				}
-				rows.close();
-				
-				if(response) {
-					Ti.API.info(" _db.connect -> Cache HIT! ("+this.location+")");
-					var jsonObject = JSON.parse(response);
-					if(callback) {
-						callback(jsonObject);
+			// perform request with If-None-Match
+			var rows = sqllite.execute('SELECT response, ETag FROM cache WHERE request_url = ?',url),
+				response,
+				ETag;
+			if (rows.isValidRow()) {   
+			    response = rows.fieldByName('response');
+			    ETag = rows.fieldByName('ETag');
+			}
+			rows.close();
+			Ti.API.info(" _db.connect -> Cached ETag: "+ETag);
+			if(response && ETag) {
+				headers["If-None-Match"] = ETag;	
+			}						
+		} 
+		
+		if(data) {
+			headers["Content-Type"] = 'application/json';
+		}
+		
+		try {		
+			var xhr = Titanium.Network.createHTTPClient({
+				onload: function() {
+					if(this.readyState == 1) {	
+						return;
 					}
-				} else {
-					Ti.API.info(" _db.connect -> Cache MISSED! ("+this.location+")");
-					real_connect();
-				}
-			};		 
-			xhr.open('HEAD', url);
-			xhr.setRequestHeader('Authorization', authstr);
-			xhr.send();
-		} else {
-			real_connect();
+					if(method == "GET") {
+						var ETag = this.getResponseHeader('ETag');
+						response = this.responseText?this.responseText.replace(/\n/g,""):"{}";				
+						Ti.API.info(" _db.connect -> Cache MISSED! ("+url+")");				
+						Ti.API.info(" _db.connect -> Got response from REAL request New ETag: "+ETag);
+						Ti.API.info(sqllite.execute("INSERT OR REPLACE INTO cache (request_url, response, ETag) VALUES (?,?,?)",url,response,ETag));
+						Titanium.API.info(' _db.connect -> Response: ' + response);
+						if(callback) {
+							callback(JSON.parse(response));
+						}
+					} else {
+						response = this.responseText?this.responseText.replace(/\n/g,""):"{}";
+						Titanium.API.info(' _db.connect -> Response: ' + response);
+						if(callback) {
+							callback(JSON.parse(response));
+						}
+					}
+				},
+				onerror: function(e) {
+					if(e.error=="Not Modified") {
+						Ti.API.info(" _db.connect -> Cache HIT! ("+url+") (Please ignore 'Not Modified' error above.)");
+						Titanium.API.info(' _db.connect -> Response: ' + response);
+						if(callback) {
+							callback(JSON.parse(response));
+						}
+					} else {
+						Titanium.API.info(' _db.connect -> Error: ' + e.error);
+						retryQueue.push(origArguments);
+					}
+				},	
+				timeout: 60000,
+			});								
+			
+			xhr.open(method, url);				
+			
+			for (var header in headers) {
+				Ti.API.info(' Header: name->'+header +' value->'+headers[header]);
+				xhr.setRequestHeader(header, headers[header]);	
+			}										
+			Titanium.API.info(' _db.connect -> XHR send data: ' + data);
+			xhr.send(data);	
+		} catch (e) {
+			Titanium.API.info(e);
+			Titanium.API.info(' _db.connect -> Exception: ' + e.error);
+		} finally {
+			xhr = null;
 		}
 	}
 
 	this.getProfileByDisplayName = function(displayName, callback) {
 
-		//prepare for argument ?key=name@example.com
-		//var arg = [{key:"key", value:displayName}];
-
-		//connect https://ttyl.iriscouch.com/ttyl/_design/person/_view/by_display_name?key="name@example.com"
 		connect({
 			url:"https://ttyl.iriscouch.com/ttyl/_design/person/_view/by_display_name?key=" + '"' + displayName + '"'
 			//object:"person",
@@ -283,6 +304,18 @@ var _db = new (function() {
 		}
 		
 	};
+	this.addRelationShip = function (person_id1,person_id2,contacts,callback){
+		var insertData = {
+			"person_id1":person_id1,
+			"person_id2":person_id2,
+			"contacts":contacts,
+			"type":"relationship"
+		};
+		_db.create(insertData,function(result){
+			callback(result);
+		});
+		
+	};
 	/*
 	var uuids=[];
 	connect({
@@ -305,17 +338,18 @@ var _db = new (function() {
 	};
 	this.addEventListener = function(e, fn) {
 		// e == login, meet
-		if(!callback[e]) {
-			callback[e] = [];
+		var handler = callback[e];
+		if(!handler) {
+			handler = callback[e] = [];
 		}
-		callback[e].push(fn);
+		handler.push(fn);
 	};
 	function onEvent(e, data) {
 		Titanium.API.info(' _db.onEvent-> event : ' + e);
 		if(!callback[e]) {
 			return;
 		}
-		for(var i=0;i<callback[e].length;i++) {
+		for(var i=0,callbackLength = callback[e].length;i<callbackLength;i++) {
 			(callback[e])[i].apply(data);
 		}
 	}
@@ -347,13 +381,14 @@ var _db = new (function() {
 		if(!e.uid) {
 			return false;
 		}
-		var uid = e.uid;
-		
-		var logged_in_person = Ti.App.Properties.getString("logged_in_person","");
+		var uid = e.uid,
+			logged_in_person = Ti.App.Properties.getString("logged_in_person","");
+			
 		if(logged_in_person) {
 			that.person_id = logged_in_person;
 			Titanium.API.info(' _db.onLoggedIn-> fetch person_id from app property : ' + that.person_id);			
 	    	privateCallback();
+	    	return;
 		}	    		
 
 		connect({
