@@ -421,7 +421,7 @@ var _db = new (function() {
 				created_datetime:timestamp,
 				place_id:'test',
 			};
-		create(payload, function(data) {
+		_db.create(payload, function(data) {
 			if(callback) {
 				callback(data);
 			}
