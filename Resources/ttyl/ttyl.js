@@ -26,6 +26,9 @@ login.setOnLoggedInCallback(function(e) {
 			login.win.close();
 			tabGroup.open();
 			_utils.hideLoading();
+			
+			//feed load
+			feed.renderRow();
 		});		
 	}	
 });

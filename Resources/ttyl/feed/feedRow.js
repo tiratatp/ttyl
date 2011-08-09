@@ -10,13 +10,13 @@ var FeedRow = function(data) {
 	};
 
 	var viewRow = Titanium.UI.createTableViewRow();
-
-	switch(data.viewType) {
+	var viewType = (data.key[2]);
+	switch(viewType) {
 		case _cons.I_MET_WHOM:
-			viewRow = IMetWhomView();
+			viewRow = IMetWhomView(data.value.person_id2);
 			break;
 		case _cons.WHO_MET_ME:
-			viewRow = WhoMetMeView();
+			viewRow = WhoMetMeView(data.value.person_id1);
 			break;
 		case _cons.FRI_MET_WHOM:
 			viewRow = FriMetWhomView();
