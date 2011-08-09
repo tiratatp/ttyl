@@ -16,6 +16,7 @@ var feed = {
 	data: [],
 	activeRow: null,
 	customData: [],
+	constructed: false,
 	
 	// config
 	tab_icon:'KS_nav_views.png',
@@ -28,7 +29,7 @@ var feed = {
 	init: function(){
 		var f = this;
 		//init data
-		f.customData = new FeedModel();
+		f.customData = _db.getMeetList(_db.person_id);
 		//init view
 		f.win = Ti.UI.createWindow({
 			title: "Stream",
@@ -64,9 +65,9 @@ var feed = {
 		});
 		
 		//bind data
-		f.win.add(addButton)
+		f.win.add(addButton);
 		f.win.add(f.table);
-		
+		f.constructed = true;
 	},
 	
 	//row process
@@ -74,7 +75,7 @@ var feed = {
 		var f = this;
 		
 		//temp render data
-		var data = f.customData.getData();
+		var data = f.customData;
 		for (var i = data.length - 1; i >= 0; i--) {
 			var feedRow = new FeedRow(data[i]);
 			f.data.push(feedRow.getRow());

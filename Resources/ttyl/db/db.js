@@ -408,7 +408,7 @@ var _db = new (function() {
 	
 	/* Meet */
 	// 2 types
-	this.getMeetList = function(person_id){
+	this.getMeetList = function(person_id, callback){
 		Titanium.API.info('_db.getMeetList -> person_id : ' + person_id);
 		connect({
 			object:"_design/meet",
@@ -420,7 +420,9 @@ var _db = new (function() {
 				{key:"inclusive_end", value:false}
 			]
 		},function(data){
-			Titanium.API.info('_db.getMeetList -> data(response) : ' + data);
+			if(callback){
+				callback(data);
+			}
 		});
 	};
 })();
