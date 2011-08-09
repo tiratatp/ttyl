@@ -29,10 +29,21 @@ login.setOnLoggedInCallback(function(e) {
 		});		
 	}	
 });
-
+login.setOnLoggedOutCallback(function(e){
+	if(e.type == "logout"){
+		Titanium.Facebook.logout();
+		tabGroup.close();
+		//login.win.open();
+		//#todo open login windows after closing tabGroup
+	}
+});
 if(Titanium.Facebook.loggedIn) {
 	Titanium.Facebook.fireEvent("login");
 }
+tabGroup.addEventListener('logout',function(e){
+	tabGroup.close();
+	login.win.open();
+});
 
 tabGroup.addTab(_home.tab);
 feed.init();
@@ -40,7 +51,8 @@ tabGroup.addTab(feed.tab);
 profile = new Profile();
 tabGroup.addTab(profile.tab);
 tabGroup.addTab(_friends.tab);
-setting = new Setting();
+//setting = new Setting();
+setting.init();
 tabGroup.addTab(setting.tab);
 // open login window
 // loginTabGroup.open();
