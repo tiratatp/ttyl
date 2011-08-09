@@ -34,20 +34,10 @@ var _friends = new (function() {
 			return;
 		}
 		data = data.rows;
-		for (var i = 0; i < data.length; i++) {
-			
-			var datum = data[i].doc;
-			Titanium.API.info(datum);
-			var row = Ti.UI.createTableViewRow({
-				height:70,
-				datum:datum,
-				backgroundColor:bgColor,
-			});
-			var rowView = Ti.UI.createView({
-				height:"100%",
-				top:0,
-				left:0
-			});
+		for (var i = 0; i < data.length; i++) {			
+			var datum = data[i].doc,
+				row;
+			Titanium.API.info(datum);			
 			if(!datum.picture) {
 				for(var j=0;j<datum.contacts.length;j++) {
 					Ti.API.info(' _friends -> renderRow: field_type: '+ datum.contacts[i].field_type);
@@ -67,32 +57,23 @@ var _friends = new (function() {
 					}
 				}
 			}
-			if(datum.picture) {
-				Ti.API.info(' _friends -> renderRow: picture: '+ datum.picture);
-				var leftImage = Ti.UI.createImageView({
-					image:datum.picture,
-					width: 50,
-					left: "5%",
-					top: 10,
-				});
-				rowView.add(leftImage);
-			}
-			var title = Ti.UI.createLabel({
-				text:datum.display_name,
+			row = Ti.UI.createTableViewRow({
+				height:80,
 				font: {
 					fontSize:16,
 					fontWeight:'bold'
 				},
-				width:'auto',
-				textAlign:'left',
-				top:20,
-				left:80,
-				height:24
+				datum: datum,
+				title: datum.display_name,
+				backgroundColor:bgColor,
+				hasDetail: true,
 			});
+			
+			if(datum.picture) {
+				Ti.API.info(' _friends -> renderRow: picture: '+ datum.picture);
+				row.leftImage = datum.picture;
+			}
 
-			rowView.add(title);
-			row.add(rowView);
-			row.hasDetail=true;
 			rows.push(row);
 
 			row.addEventListener("click", onRowClick);
