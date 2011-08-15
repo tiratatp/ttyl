@@ -10,7 +10,7 @@ Ti.include('/ttyl/login/login.js');
 Ti.include('/ttyl/feed/feed.js');
 Ti.include('/ttyl/profile/profile.js');
 Ti.include('/ttyl/setting/setting.js');
-Ti.include('/ttyl/setting/offer.js');
+Ti.include('/ttyl/profile/offer.js');
 
 // create tab group
 // var loginTabGroup = Titanium.UI.createTabGroup();
