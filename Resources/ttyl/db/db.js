@@ -420,6 +420,7 @@ var _db = new (function() {
 			place_id:'test',
 		};
 		_db.create(payload, function(data) {
+			data.person_id = person_id
 			if(callback) {
 				callback(data);
 			}

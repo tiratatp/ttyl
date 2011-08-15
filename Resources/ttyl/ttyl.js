@@ -10,6 +10,7 @@ Ti.include('/ttyl/login/login.js');
 Ti.include('/ttyl/feed/feed.js');
 Ti.include('/ttyl/profile/profile.js');
 Ti.include('/ttyl/setting/setting.js');
+Ti.include('/ttyl/setting/offer.js');
 
 // create tab group
 // var loginTabGroup = Titanium.UI.createTabGroup();
@@ -57,6 +58,10 @@ tabGroup.addTab(_friends.tab);
 //setting = new Setting();
 setting.init();
 tabGroup.addTab(setting.tab);
+_db.addEvenlistener('meet',function(data){
+	var offer = new Offer(data.person_id);
+	tabGroup.activeTab.open(offer.win);
+});
 // open login window
 // loginTabGroup.open();
 login.win.open();
