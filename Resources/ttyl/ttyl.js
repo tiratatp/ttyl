@@ -58,8 +58,10 @@ tabGroup.addTab(_friends.tab);
 //setting = new Setting();
 setting.init();
 tabGroup.addTab(setting.tab);
-_db.addEventListener('meet',function(data){
-	var offer = new Offer(data.person_id);
+_db.addEventListener('meet',function(person_id){
+	Titanium.API.info("meet");
+	Titanium.API.info(person_id);
+	var offer = new Offer(person_id);
 	tabGroup.activeTab.open(offer.win);
 });
 // open login window

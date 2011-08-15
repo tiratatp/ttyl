@@ -419,12 +419,11 @@ var _db = new (function() {
 			created_datetime:timestamp,
 			place_id:'test',
 		};
-		_db.create(payload, function(data) {
-			data['person_id'] = person_id2;
+		_db.create(payload, function() {
 			if(callback) {
-				callback(data);
+				callback(person_id2);
 			}
-			onEvent("meet",data);
+			onEvent("meet", person_id2);
 		});
 		pubnub.publish({
 			channel : 'ttyl',
