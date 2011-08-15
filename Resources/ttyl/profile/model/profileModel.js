@@ -23,7 +23,7 @@ var ProfileModel = function(id)
 			contacts = data.rows[0].value.contacts;
 			//alert(contacts+"x");
 			
-			for(var i=1; i<contacts.length; i++)
+			for(var i=0; i<contacts.length; i++)
 			{
 				//alert(contacts[i].field_value1);
 				raw_item = contacts[i];
@@ -44,7 +44,7 @@ var ProfileModel = function(id)
 			contacts = data.rows[0].value.contacts;
 			//alert(contacts+"x");
 			
-			for(var i=1; i<contacts.length; i++)
+			for(var i=0; i<contacts.length; i++)
 			{
 				//alert(contacts[i].field_value1);
 				raw_item = contacts[i];
