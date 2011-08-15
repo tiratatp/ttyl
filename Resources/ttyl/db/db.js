@@ -410,17 +410,17 @@ var _db = new (function() {
 		}
 	}
 
-	this.onMeet = function(person_id, callback) {
+	this.onMeet = function(person_id2, callback) {
 		var timestamp = new Date().getTime(),
 		payload = {
 			type:'meet',
 			person_id1:this.person_id,
-			person_id2:person_id,
+			person_id2:person_id2,
 			created_datetime:timestamp,
 			place_id:'test',
 		};
 		_db.create(payload, function(data) {
-			data.person_id = person_id
+			data['person_id'] = person_id2;
 			if(callback) {
 				callback(data);
 			}
