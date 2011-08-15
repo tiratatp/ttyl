@@ -39,6 +39,7 @@ var ProfileModel = function(id)
 	{
 		// var info = [];
 		 var id = 1;
+		_utils.showLoading("Loading Contact Data");
 		_db.getProfileByPersonId(user_id, function(data){
 			//alert(data);
 			contacts = data.rows[0].value.contacts;
@@ -53,6 +54,7 @@ var ProfileModel = function(id)
 				info.push(item);
 			}
 			var infoSection = getContactOfferInTableViewSection();
+			_utils.hideLoading();
 			callback(infoSection);
 		});
 	}

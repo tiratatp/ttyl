@@ -145,7 +145,7 @@ var Offer = function(receiver_id)
 			var insertContacts = [];
 			// alert(contacts.length);
 			//{id:id, infotype:raw_item.field_type, value:raw_item.field_value1, visibility:raw_item.visibility, offer:raw_item.offer};
-			
+			_utils.showLoading("Sending to cloud");
 			for(var i = 0 ;i<contacts.length;i++){
 				var data = {"field_type":contacts[i].infotype,
 							"field_value1":contacts[i].value,
@@ -156,6 +156,7 @@ var Offer = function(receiver_id)
 			}
 			if(insertContacts.length >0){
 			 _db.addRelationShip(user_id,_db.person_id,insertContacts,function(result){
+			 	_utils.hideLoading();
 				that.win.close();				
 			 });
 			}else{
