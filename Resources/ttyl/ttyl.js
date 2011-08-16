@@ -57,6 +57,10 @@ tabGroup.addTab(_friends.tab);
 //setting = new Setting();
 setting.init();
 tabGroup.addTab(setting.tab);
+
+tabGroup.addEventListener('focus',function(e){
+	Ti.API.debug("index : "+ e.index);
+});
 // open login window
 // loginTabGroup.open();
 login.win.open();

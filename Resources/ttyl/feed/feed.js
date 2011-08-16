@@ -27,7 +27,6 @@ var feed = {
 	//constructor
 	init: function() {
 		var f = this;
-		//init data
 		//init view
 		f.win = Ti.UI.createWindow({
 			title: "Stream",
@@ -40,24 +39,6 @@ var feed = {
 		});
 		f.table = Ti.UI.createTableView();
 
-		//temp button
-		// var addButton = Titanium.UI.createButton({
-		// borderColor:'#000',
-		// borderWidth:'1.0',
-		// color:'#999',
-		// title:'Temporary Add',
-		// font: {
-		// fontSize:30,
-		// fontFamily:'Helvetica Neue'
-		// },
-		// textAlign:'center',
-		// backgroundColor:'#fff',
-		// top:0,
-		// height:'10%',
-		// width:'100%',
-		// });
-		//bind data
-		// f.win.add(addButton);
 		f.win.add(f.table);
 		f.constructed = true;
 	},
@@ -67,8 +48,6 @@ var feed = {
 		_db.getMeetList(_db.person_id, function(data) {
 			f.customData = data;
 			if(typeof(f.customData)!=undefined && typeof(f.customData.rows)!=undefined) {
-				Ti.API.debug('customData : ' +JSON.stringify(f.customData));
-				Ti.API.debug('customData->rows : ' +f.customData.rows);
 				var data = f.customData.rows;
 				for (var i = data.length - 1; i >= 0; i--) {
 					var feedRow = new FeedRow(data[i]);
@@ -76,6 +55,7 @@ var feed = {
 				}
 				f.table.setData(f.data);
 			}
+			var feedRow = new FeedRow({key:[null,null,_cons.NONE]});
 		});
 	},
 	//temporary

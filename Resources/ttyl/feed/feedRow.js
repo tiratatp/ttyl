@@ -11,9 +11,10 @@ var FeedRow = function(data) {
 
 	var viewRow = Titanium.UI.createTableViewRow();
 	var viewType = (data.key[2]);
+	Ti.API.debug('feed view type : '+viewType);
 	switch(viewType) {
 		case _cons.I_MET_WHOM:
-			viewRow = IMetWhomView(data.value.person_id2);
+			viewRow = IMetWhomView(data.value.person_id2,data.value.place_id);
 			break;
 		case _cons.WHO_MET_ME:
 			viewRow = WhoMetMeView(data.value.person_id1);
