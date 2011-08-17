@@ -10,6 +10,7 @@ Ti.include('/ttyl/login/login.js');
 Ti.include('/ttyl/feed/feed.js');
 Ti.include('/ttyl/profile/profile.js');
 Ti.include('/ttyl/setting/setting.js');
+Ti.include('/ttyl/profile/offer.js');
 
 // create tab group
 // var loginTabGroup = Titanium.UI.createTabGroup();
@@ -57,9 +58,11 @@ tabGroup.addTab(_friends.tab);
 //setting = new Setting();
 setting.init();
 tabGroup.addTab(setting.tab);
-
-tabGroup.addEventListener('focus',function(e){
-	Ti.API.debug("index : "+ e.index);
+_db.addEventListener('meet',function(person_id){
+	Titanium.API.info("meet");
+	Titanium.API.info(person_id);
+	var offer = new Offer(person_id);
+	tabGroup.activeTab.open(offer.win);
 });
 // open login window
 // loginTabGroup.open();

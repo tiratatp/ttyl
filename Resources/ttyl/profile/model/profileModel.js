@@ -23,7 +23,7 @@ var ProfileModel = function(id)
 			contacts = data.rows[0].value.contacts;
 			//alert(contacts+"x");
 			
-			for(var i=1; i<contacts.length; i++)
+			for(var i=0; i<contacts.length; i++)
 			{
 				//alert(contacts[i].field_value1);
 				raw_item = contacts[i];
@@ -39,12 +39,13 @@ var ProfileModel = function(id)
 	{
 		// var info = [];
 		 var id = 1;
+		_utils.showLoading("Loading Contact Data");
 		_db.getProfileByPersonId(user_id, function(data){
 			//alert(data);
 			contacts = data.rows[0].value.contacts;
 			//alert(contacts+"x");
 			
-			for(var i=1; i<contacts.length; i++)
+			for(var i=0; i<contacts.length; i++)
 			{
 				//alert(contacts[i].field_value1);
 				raw_item = contacts[i];
@@ -53,6 +54,7 @@ var ProfileModel = function(id)
 				info.push(item);
 			}
 			var infoSection = getContactOfferInTableViewSection();
+			_utils.hideLoading();
 			callback(infoSection);
 		});
 	}

@@ -410,20 +410,20 @@ var _db = new (function() {
 		}
 	}
 
-	this.onMeet = function(person_id, callback) {
+	this.onMeet = function(person_id2, callback) {
 		var timestamp = new Date().getTime(),
 		payload = {
 			type:'meet',
 			person_id1:this.person_id,
-			person_id2:person_id,
+			person_id2:person_id2,
 			created_datetime:timestamp,
 			place_id:'test',
 		};
-		_db.create(payload, function(data) {
+		_db.create(payload, function() {
 			if(callback) {
-				callback(data);
+				callback(person_id2);
 			}
-			onEvent("meet",data);
+			onEvent("meet", person_id2);
 		});
 		pubnub.publish({
 			channel : 'ttyl',
